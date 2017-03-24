@@ -1,88 +1,86 @@
-const isolated = require('require-from-string');
-const fs = require('fs');
-const pkg = require('./package.json')
+const fs        = require('fs')
+const isolated  = require('require-from-string')
+const R         = require('ramda')
+const Task      = require('data.task')
+
+const { read } = require('./lib')
+const pkg      = require('./package.json')
 
 const file = 'readme.md'
 
-const rg = /```(js|javascript)[\s\S]+?```/g
+const snippetMatcher = /```(js|javascript)[\s\S]+?```/g
 
 const removeMdCodeWrap = s => s.replace(/```/g, '').replace(/^(js|javascript)/, '')
 
-const dependency = (dep, path) => typeof path === 'string' 
+// dependency :: String -> String|{path: String} -> String
+const dependency = (dep, path) => typeof path === 'string'
   ? `let ${dep} = require('${path}')`
   : `require('${path.path}')`
 
+// dependencies :: Object -> String
 const dependencies = (deps) => Object
   .keys(deps)
-  .reduce((acc, key) => `
-    ${acc}
-    ${dependency(key, deps[key])}
-    `, '')
+  .reduce((acc, key) => `${acc}; ${dependency(key, deps[key])}`, '')
 
-const doEval = async (code, id) =>  {
-  const snippet = isolated(`
-    ${dependencies(pkg.sarasa.dependencies)}
+// doEval :: String -> Int -> Task
+const doEval = (code, i) => isolated(`
+  // snippet dependencies
+  ${dependencies(pkg.sarasa.dependencies)}
 
-    function snippet() {
-      console.log('----- Snippet #' + ${id} + '-----')
-      return new Promise((res, rej) => {
-        try {
-          const result = eval(${code})
-          res(result)
-          console.log('SNIPPET SUCCESS !!!')
-          console.log(result)
-        } catch(e) {
-          rej(e)
-          console.log('SNIPPET ERROR !!!')
-          console.log(e)
-        }
-        console.log()
-      })
-    }
-    module.exports = snippet 
-  `)
-  return await snippet()
-}
+  function snippet() {
 
+    console.log('----- Running snippet #' + ${i} + '-----')
 
-const countCases = (acc, cur) => ({
-  success: cur.ok ? acc.success + 1 : acc.success,
-  reject:  cur.ok ? acc.reject : acc.reject + 1
-})
-
-const runSnippet = async (s, id) => {
-  try {
-    const result = await doEval.call(global, s, id)
-    return { ok: true }
-  } catch(e) {
-    // console.log(e)
-    return { ok: false, error: e }
-  }
-}
-
-fs.readFile(file, 'UTF-8', (err, data) => {
-  if (err) {
-    throw err
-  }
-
-  const matches = data.match(rg) || []
-
-  const snippets = matches.map(removeMdCodeWrap)
-
-  const runnedSnippets = snippets
-    .map(runSnippet)
-
-  Promise.all(runnedSnippets)
-    .then(c => {
-      const results = c.reduce(countCases, { success: 0, reject: 0 })
-
-      if (snippets.length) {
-        console.log(`\nRun ${snippets.length} snippets.`)
-        console.log(`  Succeded: ${results.success}`)
-        console.log(`  Rejected: ${results.reject}`)
-      } else {
-        console.log(`\nNo JS snippets found ${file}.  ¯\\_(ツ)_/¯`)
+    return new Promise((res, rej) => {
+      try {
+        const result = eval(\`${code}\`)
+        res(result)
+      } catch(e) {
+        rej(e)
       }
     })
-})
+  }
+  module.exports = snippet
+`)()
+
+
+// snippetTask :: String -> Int -> Task(Error, a)
+const snippetTask = (code, i) =>
+  new Task((rej, res) => doEval(code, i).then(res).catch(rej))
+
+const count = { success: 0, reject: 0 }
+const notFoundMsg = `\nNo JS snippets found ${file}.  ¯\\_(ツ)_/¯`
+
+read(file)
+  .map(R.match(snippetMatcher))
+  .map(R.map(removeMdCodeWrap))
+  .map(R.map(snippetTask))
+  .map(tasks => {
+
+    tasks.map(t => {
+      t.fork(
+        (e) => {
+          console.log('----- error -----')
+          console.log(e)
+          count.reject = count.reject + 1
+        },
+        (arg) => {
+          console.log('----- success -----')
+          console.log(arg)
+          count.success = count.success + 1
+        }
+      )
+      return t
+    })
+
+    return Object.assign(count, { snippetsRun: tasks.length })
+  })
+  .fork(
+    () => { console.log(notFoundMsg) },
+    (result) => {
+      console.log(`\nRun ${result.snippetsRun} snippets.`)
+      console.log(`  Succeded: ${result.success}`)
+      console.log(`  Rejected: ${result.reject}`)
+    }
+  )
 

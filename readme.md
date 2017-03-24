@@ -1,30 +1,35 @@
-111111111111111111111111
+#1
+
 ```js
 // ---------- o ----------
-const add = (a, b) => a + b
+var add = (a, b) => a + b
 
 // ---------- o ----------
-const square = (a) => a * a
+var square = (a) => a * a
 
 [1, 2, 3, 4].map(square) //=> [1, 4, 9, 16]
 
 // ---------- o ----------
-const adder = (a) => (b) => add(a, b)
+var adder = (a) => (b) => add(a, b)
 
-const add5 = adder(5)
+var add5 = adder(5)
 add5(1) //=> 6
 ```
 
-222222222222222222222222
+#2
+
 ```js
 _()
 ```
 
-333333333333333333333333
+#3
+
 ```js
 foo()
 ```
-444444444444444444444444
+
+#4
+
 ```js
 new Promise((res, rej) => {
   setTimeout(() => { rej('azync') }, 500)
