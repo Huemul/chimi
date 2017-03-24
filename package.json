@@ -1,0 +1,26 @@
+{
+  "name": "functional",
+  "version": "1.0.0",
+  "description": "- Why functional?   - because JS can (functions are first class citizens)   - immutability   - reuse just what you need   - its safe   - looks good (and that's good)   - testing pure functions is easy peasy :metal:   - it is fun :D - Inheritance vs. Composition :muscle: - Functional methods: the bad, the good, the awesome - Libs   - [Rambda](http://ramdajs.com/) :metal:   - [Folktale](http://folktalejs.org/) :nerd: - Resources   - [awesome functional programming](https://github.com/xgrommx/awesome-functional-programming)   - [awesome fp js](https://github.com/stoeffel/awesome-fp-js)   - [workshop](https://github.com/timoxley/functional-javascript-workshop). _beginners_ - Real world usage examples   - React & Redux :thinking:   - Node",
+  "main": "basic.every-some.js",
+  "scripts": {
+    "babel": "babel runner.js -o runner.build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "require-from-string": "^1.2.1"
+  },
+  "sarasa": {
+    "dependencies": {
+      "foo": "./foo",
+      "bar": {
+        "path": "./bar"
+      }
+    }
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-plugin-transform-async-to-generator": "^6.22.0"
+  }
+}
