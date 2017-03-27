@@ -6,7 +6,7 @@ const Task = require('data.task')
 const read = filePath => new Task((reject, resolve) => {
  fs.readFile(filePath, 'utf8', (err, data) => {
    if (err) {
-     reject([filePath, error])
+     reject([filePath, err])
    } else {
      resolve(data)
    }
