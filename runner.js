@@ -2,6 +2,8 @@ const fs        = require('fs')
 const isolated  = require('require-from-string')
 const R         = require('ramda')
 const Task      = require('data.task')
+const { List }  = require('immutable-ext')
+const ora       = require('ora')
 
 const { read } = require('./lib')
 const pkg      = require('./package.json')
@@ -25,14 +27,11 @@ const dependencies = (deps) => Object
   .reduce((acc, key) => `${acc}; ${dependency(key, deps[key])}`, '')
 
 // doEval :: String -> Int -> Task
-const doEval = (code, i) => isolated(`
+const doEval = (code) => isolated(`
   // snippet dependencies
   ${dependencies(pkg.sarasa.dependencies)}
 
   function snippet() {
-
-    console.log('----- Running snippet #' + ${i} + '-----')
-
     return new Promise((res, rej) => {
       try {
         const result = eval(\`${code}\`)
@@ -47,12 +46,14 @@ const doEval = (code, i) => isolated(`
 
 
 // snippetTask :: String -> Int -> Task(Error, a)
-const snippetTask = (code, i) =>
-  new Task((rej, res) => doEval(code, i).then(res).catch(rej))
+const snippetTask = (code) =>
+  new Task(
+    (rej, res) => doEval(code)
+      .then(value => res({value, ok: true}))
+      .catch(error => res({error, ok: false}))
+  )
 
-const count = { success: 0, reject: 0 }
-const notFoundMsg = `\nNo JS snippets found ${file}.  ¯\\_(ツ)_/¯`
-
+// extractSnippets :: String -> [String]
 const extractSnippets = file => {
   const snippets = []
 
@@ -64,35 +65,28 @@ const extractSnippets = file => {
   return snippets
 }
 
+// traverseSnippets :: List(Task) -> Task(List)
+const traverseSnippets = snippets => snippets.traverse(Task.of, snippetTask)
+
+const spinner = ora('Running snippets.').start()
+
 read(file)
   .map(extractSnippets)
-  .map(R.map(snippetTask))
-  .map(tasks => {
-
-    tasks.map(t => {
-      t.fork(
-        (e) => {
-          console.log('----- error -----')
-          console.log(e)
-          count.reject = count.reject + 1
-        },
-        (arg) => {
-          console.log('----- success -----')
-          console.log(arg)
-          count.success = count.success + 1
-        }
-      )
-      return t
-    })
-
-    return Object.assign(count, { snippetsRun: tasks.length })
-  })
+  .map(List)
+  .chain(traverseSnippets)
   .fork(
-    () => { console.log(notFoundMsg) },
-    (result) => {
-      console.log(`\nRun ${result.snippetsRun} snippets.`)
-      console.log(`  Succeded: ${result.success}`)
-      console.log(`  Rejected: ${result.reject}`)
+    () => {
+      spinner.fail(`No JS snippets found on ${file}.`)
+      console.log(`\n¯\\_(ツ)_/¯`)
+    },
+    (results) => {
+
+      const success = results.reduce((acc, cur) => cur.ok ? acc + 1 : acc, 0)
+      const reject = results.reduce((acc, cur) => cur.ok ? acc : acc + 1, 0)
+
+      spinner.succeed(`Run ${results.size} snippets.`)
+      console.log(`\n  Succeded: ${success}`)
+      console.log(`  Rejected: ${reject}`)
     }
   )
 
