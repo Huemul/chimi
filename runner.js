@@ -8,7 +8,7 @@ const ora       = require('ora')
 const { read } = require('./lib')
 const pkg      = require('./package.json')
 
-const file = 'readme.md'
+const file = 'example.md'
 
 // This regex matches:
 //   ```(?:js|javascript): start of snippet with non-capturing group
