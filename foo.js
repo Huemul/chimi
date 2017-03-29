@@ -1,1 +1,1 @@
-module.exports = () => {console.log('foo package')}
+module.exports = () => {console.log('\n----- foo package -----')}

@@ -1,1 +1,1 @@
-console.log('bar package')
+console.log('\n----- bar package -----')

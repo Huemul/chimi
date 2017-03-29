@@ -1,16 +1,78 @@
-const fs = require('fs')
+const fs           = require('fs')
+const isolated     = require('require-from-string')
+const R            = require('ramda')
+const Task         = require('data.task')
+const { List }     = require('immutable-ext')
 
-const Task = require('data.task')
+const { readFile } = require('./utils')
+const pkg          = require('./package.json')
 
-// read :: String -> Task([String, Error], String)
-const read = filePath => new Task((reject, resolve) => {
- fs.readFile(filePath, 'utf8', (err, data) => {
-   if (err) {
-     reject([filePath, err])
-   } else {
-     resolve(data)
-   }
- })
-})
+// This regex matches:
+//   ```(?:js|javascript): start of snippet with non-capturing group
+//   ([\s\S]+?): snippet code in captrouring group with non-greedy wildcard
+//   ```: end of snippet
+const snippetMatcher = /```(?:js|javascript)([\s\S]+?)```/g
 
-module.exports = { read }
+// extractSnippets :: String -> [String]
+const extractSnippets = file => {
+  const snippets = []
+
+  let match = null
+  while (match = snippetMatcher.exec(file)) {
+    snippets.push(match[1])
+  }
+
+  return snippets
+}
+
+// buildRequireExpression :: String -> String|{path: String} -> String
+const buildRequireExpression = (dep, path) => typeof path === 'string'
+  ? `let ${dep} = require('${path}')`
+  : `require('${path.path}')`
+
+// listDependencies :: Object -> String
+const listDependencies = (deps) => Object
+  .keys(deps)
+  .reduce((acc, key) => `${acc}; ${buildRequireExpression(key, deps[key])}`, '')
+
+// runSnippet :: String -> Int -> Task
+const runSnippet = (code) => isolated(`
+  // snippet dependencies
+  ${listDependencies(pkg.sarasa.dependencies)}
+
+  function snippet() {
+    return new Promise((res, rej) => {
+      try {
+        const result = eval(\`${code}\`)
+        res(result)
+      } catch(e) {
+        rej(e)
+      }
+    })
+  }
+  module.exports = snippet
+`)()
+
+let c = 0
+
+// snippetTask :: String -> Task(Error, a)
+const snippetTask = (code) =>
+  new Task(
+    (rej, res) => runSnippet(code)
+      .then(value => res({value, ok: true, id: c++}))
+      .catch(error => res({error, ok: false, id: c++}))
+  )
+
+// traverseSnippets :: FileName -> List(Task) -> Task(List)
+const traverseSnippets = snippets => snippets.traverse(Task.of, snippetTask)
+
+// FileName :: String
+
+// taskOfSnippets :: FileName -> Task(List)
+const taskOfSnippets = file =>  readFile(file)
+  .map(extractSnippets)
+  .map(List)
+  .chain(traverseSnippets)
+
+module.exports = { taskOfSnippets }
+
