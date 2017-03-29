@@ -22,7 +22,9 @@
     "rxjs-es": "^5.0.0-beta.12",
     "trae": "^1.3.0"
   },
-  "sarasa": {
+  "snipper": {
+    "file": "example.md",
+    "timeout": 1,
     "dependencies": {
       "foo": "./foo",
       "bar": {
