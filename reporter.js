@@ -20,9 +20,24 @@ const logFailure = (result, file) => {
 // logCases :: String -> [Case] -> ()
 const logCases = file => R.map(result => (result.ok ? logSuccess : logFailure)(result, file))
 
-const logResults = ({success, reject}) => {
+const logSummary = ({success, reject}) => {
   console.log(`  ${chalk.bold.green('Succeded')}: ${success}`)
   console.log(`  ${chalk.bold.red('Rejected')}: ${reject}`)
+}
+
+// listErrors :: List(Object) -> FileName -> ()
+const listErrors = (results, file) => {
+  console.log(chalk.bold.white(`\nErrors\n`))
+
+  results
+    .filter(R.compose(Boolean, R.prop('error')))
+    .forEach(c => {
+
+      console.log(chalk.white(`// --- Snippet #${c.id} in ${chalk.bold(file)} ---`))
+      console.log(chalk.red(c.error.stack))
+      console.log()
+    })
+
 }
 
 // countCases :: List(Object) -> {success: Number, success: Number}
@@ -35,6 +50,12 @@ const countCases = results => {
 
 // reportResults :: Spinner -> FileName -> [Object] -> ()
 const reportResults = R.curry((spinner, file, results) => {
+  const cases = countCases(results)
+
+  if (cases.reject) {
+    listErrors(results, file)
+  }
+
   spinner.succeed(chalk.bold.green(`Run ${results.size} snippets.\n`))
 
   const sortedResults = R.sortBy(R.prop('id'), results.toArray())
@@ -43,11 +64,11 @@ const reportResults = R.curry((spinner, file, results) => {
 
   console.log()
 
-  logResults(countCases(results))
+  logSummary(cases)
 })
 
-// reportNoFilesFound :: Spinner -> () -> ()
-const reportNoFilesFound = (spinner) => () => {
+// reportNoFilesFound :: Spinner -> FileName -> ()
+const reportNoFilesFound = (spinner, file) => () => {
   spinner.fail(`No JS snippets found on ${file}.`)
   console.log(`\n¯\\_(ツ)_/¯`)
 }
