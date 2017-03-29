@@ -1,3 +1,11 @@
+#0
+
+```js
+new Promise((res, rej) => {
+  setTimeout(() => { res('azync') }, 500)
+})
+```
+
 #1
 
 ```js
@@ -27,12 +35,3 @@ _()
 ```js
 foo()
 ```
-
-#4
-
-```js
-new Promise((res, rej) => {
-  setTimeout(() => { rej('azync') }, 500)
-})
-```
-

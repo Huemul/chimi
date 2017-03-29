@@ -53,14 +53,12 @@ const runSnippet = (code) => isolated(`
   module.exports = snippet
 `)()
 
-let c = 0
-
-// snippetTask :: String -> Task(Error, a)
-const snippetTask = (code) =>
+// snippetTask :: {code: String, id: Int} -> Task(Error, a)
+const snippetTask = ({code, id}) =>
   new Task(
     (rej, res) => runSnippet(code)
-      .then(value => res({value, ok: true, id: c++}))
-      .catch(error => res({error, ok: false, id: c++}))
+      .then(value => res({value, ok: true, id}))
+      .catch(error => res({error, ok: false, id}))
   )
 
 // traverseSnippets :: FileName -> List(Task) -> Task(List)
@@ -71,6 +69,7 @@ const traverseSnippets = snippets => snippets.traverse(Task.of, snippetTask)
 // taskOfSnippets :: FileName -> Task(List)
 const taskOfSnippets = file =>  readFile(file)
   .map(extractSnippets)
+  .map(snippets => snippets.map((snippet, i) => ({code: snippet, id: i})))
   .map(List)
   .chain(traverseSnippets)
 
