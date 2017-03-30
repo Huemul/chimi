@@ -1,11 +1,12 @@
 const fs           = require('fs')
-const isolated     = require('require-from-string')
 const R            = require('ramda')
+const isolated     = require('require-from-string')
 const Task         = require('data.task')
 const { List }     = require('immutable-ext')
 
 const { readFile } = require('./utils')
-const pkg          = require('./package.json')
+const { snipper }  = require('./package.json')
+const defaults     = require('./defaults')
 
 // This regex matches:
 //   ```(?:js|javascript): start of snippet with non-capturing group
@@ -33,12 +34,14 @@ const buildRequireExpression = (dep, path) => typeof path === 'string'
 // listDependencies :: Object -> String
 const listDependencies = (deps) => Object
   .keys(deps)
-  .reduce((acc, key) => `${acc}; ${buildRequireExpression(key, deps[key])}`, '')
+  .map(key => buildRequireExpression(key, deps[key]))
+  .map(r => r + ';')
+  .join('\n')
 
 // runSnippet :: String -> Int -> Task
 const runSnippet = (code) => isolated(`
   // snippet dependencies
-  ${listDependencies(pkg.sarasa.dependencies)}
+  ${listDependencies(snipper.dependencies || [])}
 
   function snippet() {
     return new Promise((res, rej) => {
@@ -56,12 +59,35 @@ const runSnippet = (code) => isolated(`
 // snippetTask :: {code: String, id: Int} -> Task(Error, a)
 const snippetTask = ({code, id}) =>
   new Task(
-    (rej, res) => runSnippet(code)
-      .then(value => res({value, ok: true, id}))
-      .catch(error => res({error, ok: false, id}))
+    (reject, resolve) => {
+      let finished = false
+
+      const t = setTimeout(() => {
+        if (!finished) {
+          finished = true
+          resolve({error: new Error('Timeout'), ok: false, id})
+        }
+      }, (snipper.timeout || defaults.timeout) * 1000)
+
+      runSnippet(code)
+        .then(value => {
+          if (!finished) {
+            finished = true
+            clearTimeout(t)
+            resolve({value, ok: true, id})
+          }
+        })
+        .catch(error => {
+          if (!finished) {
+            finished = true
+            clearTimeout(t)
+            resolve({error, ok: false, id})
+          }
+        })
+    }
   )
 
-// traverseSnippets :: FileName -> List(Task) -> Task(List)
+// traverseSnippets :: List(Task) -> Task(List)
 const traverseSnippets = snippets => snippets.traverse(Task.of, snippetTask)
 
 // FileName :: String

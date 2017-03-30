@@ -1,3 +1,5 @@
+const { snipper }        = require('./package.json')
+const defaults           = require('./defaults')
 const { taskOfSnippets } = require('./lib')
 const {
   createSpinner,
@@ -5,11 +7,13 @@ const {
   reportResults
 } = require('./reporter')
 
-const file = 'example.md'
-
+const file = snipper.file || defaults.file
 const spinner = createSpinner()
 
 spinner.start()
 
-taskOfSnippets(file).fork(reportNoFilesFound, reportResults(spinner, file))
+taskOfSnippets(file).fork(
+  reportNoFilesFound(spinner, file),
+  reportResults(spinner, file)
+)
 
