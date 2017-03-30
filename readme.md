@@ -19,5 +19,9 @@
 - [ ] CLI
   - [ ] Jest like interface when running/watching.
 - [ ] Transpile with Babel. _Check for project Babel config_. (?)
-- [ ] Snippet metadata. _Maybe in a HTML code on top of the snippet_.
-- [ ] Improve snippet dependency injection. _Maybe get from matadata_.
+- [ ] Lint with Eslint. _If project has Eslint configured_.(?)
+- [ ] Snippet metadata. Using MD snippets flags (?)
+  - List local dependencies: **\`\`\`js,(dependencies (_:lodash)(trae:trae))**
+  - Skip snippets: **\`\`\`js,skip**
+  - Expect to fail: **\`\`\`js,throws**
+  - Groups: **\`\`\`js,(group (example:1)) \`\`\`js,(group (example:2))**
