@@ -1,11 +1,11 @@
 const fs           = require('fs')
 const R            = require('ramda')
-const isolated     = require('require-from-string')
 const Task         = require('data.task')
 const { List }     = require('immutable-ext')
 
 const { readFile } = require('./utils')
 const config       = require('./config')
+const runSnippet   = require('./run-snippet')
 
 // This regex matches:
 //   ```(?:js|javascript): start of snippet with non-capturing group
@@ -37,8 +37,8 @@ const listDependencies = (deps) => Object
   .map(r => r + ';')
   .join('\n')
 
-// runSnippet :: String -> Int -> Task
-const runSnippet = (code) => isolated(`
+// wrapSnippet :: String -> Task
+const wrapSnippet = (code) => `
   // snippet dependencies
   ${listDependencies(config.dependencies || [])}
 
@@ -52,51 +52,24 @@ const runSnippet = (code) => isolated(`
       }
     })
   }
-  module.exports = snippet
-`)()
 
-// snippetTask :: {code: String, id: Int} -> Task(Error, a)
-const snippetTask = ({code, id}) =>
-  new Task(
-    (reject, resolve) => {
-      let finished = false
+  snippet()
+`
 
-      const t = setTimeout(() => {
-        if (!finished) {
-          finished = true
-          resolve({error: new Error('Timeout'), ok: false, id})
-        }
-      }, config.timeout * 1000)
+const map = R.addIndex(R.map)
 
-      runSnippet(code)
-        .then(value => {
-          if (!finished) {
-            finished = true
-            clearTimeout(t)
-            resolve({value, ok: true, id})
-          }
-        })
-        .catch(error => {
-          if (!finished) {
-            finished = true
-            clearTimeout(t)
-            resolve({error, ok: false, id})
-          }
-        })
-    }
-  )
-
-// traverseSnippets :: List(Task) -> Task(List)
-const traverseSnippets = snippets => snippets.traverse(Task.of, snippetTask)
+// traverseSnippets :: Int -> List(Task) -> Task(List)
+const traverseSnippets = timeout => snippets => snippets.traverse(Task.of, runSnippet(timeout))
 
 // FileName :: String
 
-// taskOfSnippets :: FileName -> Task(List)
-const taskOfSnippets = file =>  readFile(file)
+// taskOfSnippets :: Int -> FileName -> Task(List)
+const taskOfSnippets = (timeout, file) =>  readFile(file)
   .map(extractSnippets)
-  .map(snippets => snippets.map((snippet, i) => ({code: snippet, id: i})))
+  .map(R.map(wrapSnippet))
+  .map(map((snippet, id) => ({ snippet, id })))
   .map(List)
-  .chain(traverseSnippets)
+  .chain(traverseSnippets(timeout))
 
 module.exports = { taskOfSnippets }
 

@@ -10,4 +10,4 @@ const config = require('./config.js')
 
 const file = argv.file || config.file
 
-runner(file)
+runner(config.timeout, file)

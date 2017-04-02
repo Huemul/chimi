@@ -5,12 +5,12 @@ const {
   reportResults
 } = require('./reporter')
 
-function runner(file) {
+function runner(timeout, file) {
   const spinner = createSpinner()
 
   spinner.start()
 
-  return taskOfSnippets(file).fork(
+  return taskOfSnippets(timeout, file).fork(
     reportNoFilesFound(spinner, file),
     reportResults(spinner, file)
   )

@@ -25,16 +25,31 @@ const logSummary = ({success, reject}) => {
   console.log(`  ${chalk.bold.red('Rejected')}: ${reject}`)
 }
 
+// listOutput :: List(Object) -> FileName -> ()
+const listOutput = (results, file) => {
+  console.log(chalk.bold.white(`\nOutput\n`))
+
+  results
+    .filter(R.compose(Boolean, R.path(['stdout', 'length'])))
+    .forEach(c => {
+
+      console.log(chalk.white(`// --- Snippet #${c.id} in ${chalk.bold(file)} ---`))
+      c.stdout.forEach(o => console.log(chalk.white(o)))
+      console.log()
+    })
+
+}
+
 // listErrors :: List(Object) -> FileName -> ()
 const listErrors = (results, file) => {
   console.log(chalk.bold.white(`\nErrors\n`))
 
   results
-    .filter(R.compose(Boolean, R.prop('error')))
+    .filter(R.compose(R.not, R.prop('ok')))
     .forEach(c => {
 
       console.log(chalk.white(`// --- Snippet #${c.id} in ${chalk.bold(file)} ---`))
-      console.log(chalk.red(c.error.stack))
+      c.stderr.forEach(o => console.log(chalk.red(o)))
       console.log()
     })
 
@@ -52,6 +67,7 @@ const countCases = results => {
 const reportResults = R.curry((spinner, file, results) => {
   const cases = countCases(results)
 
+  listOutput(results, file)
   if (cases.reject) {
     listErrors(results, file)
   }
@@ -70,7 +86,7 @@ const reportResults = R.curry((spinner, file, results) => {
 // reportNoFilesFound :: Spinner -> FileName -> ()
 const reportNoFilesFound = (spinner, file) => () => {
   spinner.fail(`No JS snippets found on ${file}.`)
-  console.log(`\n¯\\_(ツ)_/¯`)
+  console.log(chalk.bold("\n¯\\_(ツ)_/¯"))
 }
 
 module.exports = {
