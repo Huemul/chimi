@@ -19,12 +19,11 @@ function runSnippet(timeout, { snippet, id }) {
   return new Task((reject, resolve) => {
 
     const t = setTimeout(() => {
-      child.kill()
+      child.kill('SIGKILL')
     }, timeout)
 
     child.on('exit', (code, signal) => {
       clearTimeout(t)
-
       resolve({
         id,
         ok: validateSnippetResult(code, signal, stderr),
@@ -34,10 +33,6 @@ function runSnippet(timeout, { snippet, id }) {
         stderr
       })
     })
-
-    setTimeout(() => {
-      child.kill('SIGTERM')
-    }, timeout)
 
     child.stdin.write(snippet)
     child.stdin.end()
