@@ -2,7 +2,10 @@ const fs       = require('fs')
 const defaults = require('./defaults')
 
 function getConfig() {
-  return fs.existsSync('.snipperrc') ? JSON.parse(fs.readFileSync('.snipperrc')) : defaults;
+  const conf = fs.existsSync('.snipperrc')
+    ? JSON.parse(fs.readFileSync('.snipperrc'))
+    : {}
+  return Object.assign(defaults, conf)
 }
 
 module.exports = getConfig();

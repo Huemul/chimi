@@ -2,18 +2,31 @@
 
 const exec = require('child_process').exec;
 
-module.exports = function (snippet, timeout = 1000) {
+const R    = require('ramda')
+const Task = require('data.task')
+
+const validateSnippetResult = (code, signal, stderr) => code === 0 && !signal && stderr.length === 0
+
+function runSnippet(timeout, { snippet, id }) {
   const child = exec('node')
 
-  let stdout = ''
-  child.stdout.on('data', function (data) { stdout += data })
+  const stdout = []
+  child.stdout.on('data', (data) => stdout.push(data))
 
-  let stderr = ''
-  child.stderr.on('data', function (data) { stderr += data })
+  const stderr = []
+  child.stderr.on('data', (data) => stderr.push(data))
 
-  return new Promise((resolve, reject) => {
+  return new Task((reject, resolve) => {
+
+    const t = setTimeout(() => {
+      child.kill('SIGKILL')
+    }, timeout)
+
     child.on('exit', (code, signal) => {
+      clearTimeout(t)
       resolve({
+        id,
+        ok: validateSnippetResult(code, signal, stderr),
         code,
         signal,
         stdout,
@@ -21,11 +34,9 @@ module.exports = function (snippet, timeout = 1000) {
       })
     })
 
-    setTimeout(() => {
-      child.kill()
-    }, timeout)
-
     child.stdin.write(snippet)
     child.stdin.end()
   })
 }
+
+module.exports = R.curry(runSnippet)

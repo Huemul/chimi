@@ -1,4 +1,4 @@
 module.exports = {
   "file": "README.md",
-  "timeout": 15
+  "timeout": 5 * 1000
 }
