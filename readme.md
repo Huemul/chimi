@@ -9,9 +9,9 @@
 ### V1
 - [ ] CLI
   - [ ] Configuration (`.snipper.js(on)?|.snipperrc`).
-  - [ ] Run multiple files (best effort).
+  - [ ] Missing flags (?).
+  - [ ] `--help`.
   - [x] Log failures. 
-- [ ] Environment. _Use [`jsdom`](https://github.com/tmpvar/jsdom)_?
 - [ ] [Snippet metadata](#snippet-metadata). Using MD snippets flags (?)
 
 ### Future
@@ -19,8 +19,10 @@
 - [ ] CLI
   - [ ] Improve current interace. _Jest like interface when running/watching_.
   - [ ] Watch mode.
+  - [ ] Run multiple files.
 - [ ] Transpile with Babel. _Check for project Babel config_. (?)
 - [ ] Lint with Eslint. _If project has Eslint configured_.(?)
+- [ ] Environment. _Use [`jsdom`](https://github.com/tmpvar/jsdom)_?
 
 ## Docs
 
