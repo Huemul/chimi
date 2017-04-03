@@ -10,11 +10,11 @@ const validateSnippetResult = (code, signal, stderr) => code === 0 && !signal &&
 function runSnippet(timeout, { snippet, id }) {
   const child = exec('node')
 
-  const stdout = []
-  child.stdout.on('data', (data) => stdout.push(data))
+  let stdout = ''
+  child.stdout.on('data', (data) => stdout += data)
 
-  const stderr = []
-  child.stderr.on('data', (data) => stderr.push(data))
+  let stderr = ''
+  child.stderr.on('data', (data) => stderr += data)
 
   return new Task((reject, resolve) => {
 

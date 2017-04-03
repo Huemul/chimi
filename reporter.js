@@ -34,7 +34,7 @@ const listOutput = (results, file) => {
     .forEach(c => {
 
       console.log(chalk.white(`// --- Snippet #${c.id} in ${chalk.bold(file)} ---`))
-      c.stdout.forEach(o => console.log(chalk.white(o)))
+      console.log(chalk.white(c.stdout))
       console.log()
     })
 
@@ -49,7 +49,7 @@ const listErrors = (results, file) => {
     .forEach(c => {
 
       console.log(chalk.white(`// --- Snippet #${c.id} in ${chalk.bold(file)} ---`))
-      c.stderr.forEach(o => console.log(chalk.red(o)))
+      console.log(chalk.red(c.stderr))
       console.log()
     })
 
