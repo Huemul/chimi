@@ -17,7 +17,7 @@
 ### Future
 
 - [ ] CLI
-  - [ ] Improve current interace. _Jest like interface when running/watching_.
+  - [ ] Improve current interface. _Jest like interface when running/watching_.
   - [ ] Watch mode.
   - [ ] Run multiple files.
 - [ ] Transpile with Babel. _Check for project Babel config_. (?)
