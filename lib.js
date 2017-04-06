@@ -1,17 +1,26 @@
-const fs           = require('fs')
-const R            = require('ramda')
-const Task         = require('data.task')
-const { List }     = require('immutable-ext')
+const fs              = require('fs')
+const R               = require('ramda')
+const Task            = require('data.task')
+const { List }        = require('immutable-ext')
+const { stripIndent } = require('common-tags')
 
-const { readFile } = require('./utils')
-const config       = require('./config')
-const runSnippet   = require('./run-snippet')
+const { readFile }    = require('./utils')
+const config          = require('./config')
+const runSnippet      = require('./run-snippet')
 
 // This regex matches:
 //   ```(?:js|javascript): start of snippet with non-capturing group
 //   ([\s\S]+?): snippet code in captrouring group with non-greedy wildcard
 //   ```: end of snippet
 const snippetMatcher = /```(?:js|javascript)([\s\S]+?)```/g
+
+// FIRST LINE /^\s*#(.*)$/m
+// This regex matches
+//   ^\s* any whitespace a the beginning of the line
+//   #  a hash character
+//   (.*)$ any characters until the end of the line
+//   /m makes ^ and $ match to any line
+//   since 'g' is not used the match is done only to the first line
 
 // extractSnippets :: String -> [String]
 const extractSnippets = file => {
@@ -37,23 +46,12 @@ const listDependencies = (deps) => Object
   .map(r => r + ';')
   .join('\n')
 
-// wrapSnippet :: String -> Task
-const wrapSnippet = (code) => `
+// injectDependencies :: String -> Task
+const injectDependencies = (code) => stripIndent`
   // snippet dependencies
   ${listDependencies(config.dependencies || [])}
 
-  function snippet() {
-    return new Promise((res, rej) => {
-      try {
-        const result = eval(\`${code}\`)
-        res(result)
-      } catch(e) {
-        rej(e)
-      }
-    })
-  }
-
-  snippet()
+  ${code}
 `
 
 const map = R.addIndex(R.map)
@@ -66,7 +64,7 @@ const traverseSnippets = timeout => snippets => snippets.traverse(Task.of, runSn
 // taskOfSnippets :: Int -> FileName -> Task(List)
 const taskOfSnippets = (timeout, file) =>  readFile(file)
   .map(extractSnippets)
-  .map(R.map(wrapSnippet))
+  .map(R.map(injectDependencies))
   .map(map((snippet, id) => ({ snippet, id })))
   .map(List)
   .chain(traverseSnippets(timeout))
