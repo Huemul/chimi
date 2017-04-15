@@ -1,4 +1,4 @@
-const fs       = require('fs')
+const fs = require('fs')
 const defaults = require('./defaults')
 
 function getConfig() {
@@ -8,4 +8,4 @@ function getConfig() {
   return Object.assign(defaults, conf)
 }
 
-module.exports = getConfig();
+module.exports = getConfig()
