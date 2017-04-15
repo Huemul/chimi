@@ -1,9 +1,9 @@
 {
-  "name": "snipperjs",
+  "name": "chimi",
   "version": "0.0.1",
   "description": "Run JavaScript snippets from your markdown files",
   "bin": {
-    "snipper": "./bin.js"
+    "chimi": "./bin.js"
   },
   "scripts": {
     "babel": "babel runner.js -o runner.build.js"

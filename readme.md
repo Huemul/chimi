@@ -1,14 +1,12 @@
-# snipper :gun:
+# chimi :gun:
 
 > Run JavaScript snippets from your markdown files.
-
-# (╯°□°)--︻デ═一 - - -
 
 ## TODO
 
 ### V1
 - [ ] CLI
-  - [ ] Configuration (`.snipper.js(on)?|.snipperrc`).
+  - [ ] Configuration (`.chimi.js(on)?|.chimirc`).
   - [ ] Missing flags (?).
   - [ ] `--help`.
   - [x] Log failures. 
