@@ -1,4 +1,4 @@
-# chimi :gun:
+# chimi
 
 > Run JavaScript snippets from your markdown files.
 
