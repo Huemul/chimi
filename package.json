@@ -1,11 +1,12 @@
 {
-  "name": "snipperjs",
+  "name": "chimi",
   "version": "0.0.1",
   "description": "Run JavaScript snippets from your markdown files",
   "bin": {
-    "snipper": "./bin.js"
+    "chimi": "./bin.js"
   },
   "scripts": {
+    "format": "prettier --no-semi --single-quote --trailing-comma es5 --write '*.js'",
     "babel": "babel runner.js -o runner.build.js"
   },
   "author": "",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
-    "babel-plugin-transform-async-to-generator": "^6.22.0"
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "prettier": "^1.1.0"
   }
 }

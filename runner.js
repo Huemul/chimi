@@ -2,7 +2,7 @@ const { taskOfSnippets } = require('./lib')
 const {
   createSpinner,
   reportNoFilesFound,
-  reportResults
+  reportResults,
 } = require('./reporter')
 
 function runner(timeout, file) {
