@@ -5,8 +5,8 @@ const argv = require('minimist')(process.argv.slice(2), {
   },
 })
 
-const runner = require('./runner')
-const config = require('./config.js')
+const runner = require('../lib/runner')
+const config = require('../lib/config')
 
 const file = argv.file || config.file
 

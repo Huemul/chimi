@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Run JavaScript snippets from your markdown files",
   "bin": {
-    "chimi": "./bin.js"
+    "chimi": "./bin/bin.js"
   },
   "scripts": {
     "format": "prettier --no-semi --single-quote --trailing-comma es5 --write '*.js'",
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^1.1.3",
+    "chipa": "^0.1.1",
     "common-tags": "^1.4.0",
     "data.either": "^1.5.0",
     "data.maybe": "^1.2.2",
