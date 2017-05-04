@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "add": {
+      "path": "./add"
+    },
+    "trae": "trae"
+  },
+  "file": "README.md"
+}
