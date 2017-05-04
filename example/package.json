@@ -1,0 +1,12 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "../bin/bin.js"
+  },
+  "dependencies": {
+    "trae": "^1.4.1"
+  }
+}
