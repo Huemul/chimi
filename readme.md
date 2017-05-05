@@ -8,7 +8,7 @@
 
 ## Configuration
 
-To let `chimi` find what snippets to run you have to indicate the code snippet language using either `js` or `javascript` like so:
+To let `chimi` find the snippets you have to indicate the code snippet language using either `js` or `javascript` like so:
 
 ```
 ```js
@@ -36,7 +36,7 @@ _NOTE_: _the `.chimirc` file has to be a valid JSON_.
 
 `dependencies`: `object`
 
-A list of dependencies to be `require`d on each snippet. Each key represents the path name and the value is the variable name, if the value is [`falsy`](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) (_we recommend using an empty string_) the `require` statement will be not assigned to a variable.
+A list of dependencies to be `require`d on each snippet. Each key represents the path name and the value is the variable name, if the value is an empty string the `require` statement will be not assigned to a variable.
 
 The depenencies in the example will generate these `require`s:
 ```
@@ -64,19 +64,20 @@ The time, in miliseconds, to wait for the snippet execution before considering i
 ## TODO
 
 ### V1
-- [ ] CLI
-  - [ ] Configuration (`.chimi.js(on)?|.chimirc`).
-  - [ ] `--help`.
+- [ ] Tests
+- [x] CLI
+  - [x ] Configuration (`.chimi.js(on)?|.chimirc`).
+  - [x] `--help`.
   - [x] Log failures. 
 
 ### Future
 
 - [ ] CLI
   - [ ] Improve current interface. _Jest like interface when running/watching_.
-  - [ ] Run multiple files.
-- [ ] Transpile with Babel. _Check for project Babel config_. (?)
-- [ ] Lint with Eslint. _If project has Eslint configured_.(?)
+- [ ] Process code
+  - [ ] Transpile with Babel. _Check for project Babel config_. (?)
+  - [ ] Lint with Eslint. _If project has Eslint configured_.(?)
 - [ ] Environment. _Use [`jsdom`](https://github.com/tmpvar/jsdom)_?
-- [ ] Snippet metadata. _Using MD snippets flags_ (?)
+- [ ] Snippet metadata. _Using MD snippets flags_
 - [ ] Provide a programmatic API.
 
