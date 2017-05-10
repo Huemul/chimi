@@ -40,7 +40,7 @@ _NOTE_: _if it is a JavaScript file, an object has to be exported_.
 A list of dependencies to be `require`d on each snippet. Each key represents the path name and the value is the variable name, if the value is an empty string the `require` statement will be not assigned to a variable.
 
 The depenencies in the example will generate these `require`s:
-```
+```js
 let trae   = require('trae')
 let _      = require('lodash')
 let config = require('./config')
@@ -67,7 +67,7 @@ The time, in miliseconds, to wait for the snippet execution before considering i
 ### V1
 - [ ] Tests
 - [x] CLI
-  - [x ] Configuration (`.chimi.js(on)?|.chimirc`).
+  - [x] Configuration (`.chimi.js(on)?|.chimirc`).
   - [x] `--help`.
   - [x] Log failures. 
 
