@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 const meow = require('meow')
+const chalk = require('chalk')
 
 const msg = `
-  Usage
-    $ chimi -f file
+  ${chalk.bold.white('Usage')}
+  $ chimi -f <file> -c <config-file>
 
-  Options
+  ${chalk.bold.white('Options')}
     --file,   -f  File or glob matching multiple files (default: "README.md")
-    --config, -c  Use configuration from this file (default: ".chimirc")
+    --config, -c  Use configuration from this file     (default: ".chimirc")
 
-  Examples
+  ${chalk.bold.white('Examples')}
     $ chimi -f README.md
 
     $ chimi -f doc/*.md
