@@ -6,6 +6,40 @@
 
 `chimi` parses Markdown files and runs the JavaScript snippets to check if everything is alright.
 
+## Installation
+
+```bash
+$ yarn add chimi --dev
+$ npm i chimi --save-dev
+
+# global works too
+
+$ yarn global add chimi
+$ npm i -g chimi
+```
+
+# Usage
+
+```
+  Run JavaScript snippets from your markdown files
+
+  Usage
+  $ chimi -f <file> -c <config-file>
+
+  Options
+    --file,    -f      File or glob matching multiple files (default: "README.md")
+    --config,  -c      Use configuration from this file     (default: ".chimirc")
+    --help,    -h      Show help
+    --version, -v, -V  Show version
+
+  Examples
+    $ chimi -f README.md
+
+    $ chimi -f doc/*.md
+
+    $ chimi -c chimi.config.js
+```
+
 ## Configuration
 
 To let `chimi` find the snippets you have to indicate the snippet language using either `js` or `javascript` like so:
@@ -32,8 +66,9 @@ You can configure `chimi` using a configuration file, it might be a JSON or Java
   "timeout": 5000
 }
 ```
-_NOTE_: _the `.chimirc` file has to be a valid JSON_.
-_NOTE_: _if it is a JavaScript file, an object has to be exported_.
+**NOTE**: _the `.chimirc` file has to be a valid JSON_.
+
+**NOTE**: _if it is a JavaScript file, an object has to be exported_.
 
 `dependencies`: `object`
 

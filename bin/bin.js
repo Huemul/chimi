@@ -7,8 +7,10 @@ const msg = `
   $ chimi -f <file> -c <config-file>
 
   ${chalk.bold.white('Options')}
-    --file,   -f  File or glob matching multiple files (default: "README.md")
-    --config, -c  Use configuration from this file     (default: ".chimirc")
+    --file,    -f      File or glob matching multiple files (default: "README.md")
+    --config,  -c      Use configuration from this file     (default: ".chimirc")
+    --help,    -h      Show help
+    --version, -v, -V  Show version
 
   ${chalk.bold.white('Examples')}
     $ chimi -f README.md
@@ -23,6 +25,8 @@ const cli = meow(msg, {
     f: 'file',
     c: 'config',
     h: 'help',
+    v: 'version',
+    V: 'version',
   },
   default: {
     config: '.chimirc',
