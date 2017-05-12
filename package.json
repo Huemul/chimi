@@ -1,6 +1,6 @@
 {
   "name": "chimi",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Run JavaScript snippets from your markdown files",
   "bin": {
     "chimi": "./bin/bin.js"
@@ -24,7 +24,6 @@
     "url": "https://github.com/Huemul/chimi/issues"
   },
   "homepage": "https://github.com/Huemul/chimi#readme",
-  "license": "MIT",
   "dependencies": {
     "chalk": "^1.1.3",
     "chipa": "^0.1.1",
