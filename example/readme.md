@@ -56,5 +56,5 @@ This snippet will not finish running. _The default timeout is 5s_.
 ```js
 setTimeout(() => {
   console.log('I will never run')
-},10 * 1000)
+}, 10 * 1000)
 
