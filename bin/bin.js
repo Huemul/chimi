@@ -10,6 +10,7 @@ const msg = `
     --file,    -f      File or glob matching multiple files (default: "README.md")
     --config,  -c      Use configuration from this file     (default: ".chimirc")
     --help,    -h      Show help
+    --silent           Prevent snippets from printing messages through the console
     --version, -v, -V  Show version
 
   ${chalk.bold.white('Examples')}
@@ -44,4 +45,4 @@ if (eitherConfig.isLeft) {
 const config = eitherConfig.get()
 const file = cli.flags.file || config.file
 
-runner(config.dependencies, config.timeout, file)
+runner(config.dependencies, config.timeout, file, cli.flags.silent)
