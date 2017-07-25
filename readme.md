@@ -1,6 +1,6 @@
 # chimi
 
-> Run JavaScript snippets from your Markdown files.
+> Validate JavaScript code from your README.
 
 ## How it works
 
@@ -30,6 +30,7 @@ $ npm i -g chimi
     --file,    -f      File or glob matching multiple files (default: "README.md")
     --config,  -c      Use configuration from this file     (default: ".chimirc")
     --help,    -h      Show help
+    --silent           Prevent snippets from printing messages through the console
     --version, -v, -V  Show version
 
   Examples
@@ -96,6 +97,20 @@ The path to the file/s you want to parse. It can also be a [glob](https://github
 Default: `5000`.
 
 The time, in miliseconds, to wait for the snippet execution before considering it a failure.
+
+### Snippet annotations
+
+Markdown snippets can be annotated by adding extra stuff on the same line as the language. Don't worry this annotations do not show on the web.
+
+Chimi supports the following annotations:
+
+#### Skip
+
+To skip a snippet:
+
+```
+```js (skip)
+```
 
 ## TODO
 
