@@ -104,7 +104,8 @@ The time, in miliseconds, to wait for the snippet execution before considering i
 - [x] CLI
   - [x] Configuration (`.chimi.js(on)?|.chimirc`).
   - [x] `--help`.
-  - [x] Log failures. 
+  - [x] Log failures.
+  - [ ] Debug option for printing the wrapped snippet.
 
 ### Future
 
