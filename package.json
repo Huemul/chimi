@@ -1,7 +1,7 @@
 {
   "name": "chimi",
   "version": "0.0.5",
-  "description": "Run JavaScript snippets from your markdown files",
+  "description": "Validate JavaScript code from your README",
   "bin": {
     "chimi": "./bin/bin.js"
   },
