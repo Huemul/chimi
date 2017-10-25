@@ -1,6 +1,6 @@
 // Run snippet in another process. Return promise with status code, stdout and stderr
 
-const exec = require('child_process').exec
+const { exec } = require('child_process')
 const fs = require('fs')
 
 const R = require('ramda')
@@ -17,8 +17,7 @@ const validateResult = (code, signal, stderr) =>
 // FileResult :: { file: String, results: [Result] }
 
 // runSnippet :: Int -> Snippet -> Future(Result)
-const runSnippet = R.curry(_runSnippet)
-function _runSnippet(timeout, { value, id }) {
+function runSnippetUncurried(timeout, { value, id }) {
   const fileName = `snippet-${Math.random()}.js`
 
   fs.writeFileSync(fileName, value)
@@ -26,10 +25,14 @@ function _runSnippet(timeout, { value, id }) {
   const child = exec(`node ${fileName}`)
 
   let stdout = ''
-  child.stdout.on('data', data => (stdout += data))
+  child.stdout.on('data', data => {
+    stdout += data
+  })
 
   let stderr = ''
-  child.stderr.on('data', data => (stderr += data))
+  child.stderr.on('data', data => {
+    stderr += data
+  })
 
   const timeoutID = setTimeout(() => {
     child.kill('SIGKILL')
@@ -55,11 +58,12 @@ function _runSnippet(timeout, { value, id }) {
     })
   })
 }
+const runSnippet = R.curry(runSnippetUncurried)
 
 // runSnippets :: Int -> FileN -> Future(FileResult)
 const runSnippets = (timeout, { file, snippets }) =>
   S.compose(
-    S.map(snippets => ({ file, snippets })),
+    S.map(s => ({ file, snippets: s })),
     S.traverse(Future, runSnippet(timeout))
   )(snippets)
 

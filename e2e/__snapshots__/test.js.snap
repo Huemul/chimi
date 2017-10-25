@@ -105,12 +105,35 @@ ReferenceError: answer is not defined
     at Function.Module._load (module.js:500:3)
     at Function.Module.runMain (module.js:665:10)
     at startup (bootstrap_node.js:187:16)
-    at bootstrap_node.js:608:3
+    at bootstrap_node.js:607:3
 
 
  FAIL  0-README.md
 
   Files: 1
   Snippets rejected: 1
+"
+`;
+
+exports[`e2e tests should run 06-with-dependencies as expected 1`] = `
+"
+Output
+
+----- README.md ----- 
+
+--- Snippet #1 ---
+I'm here for the side effects
+
+
+--- Snippet #2 ---
+I'm here for the side effects
+8080
+
+
+ PASS  0-README.md
+ PASS  1-README.md
+
+  Files: 1
+  Snippets succeded: 2
 "
 `;

@@ -41,7 +41,7 @@ const listOutput = results => {
 
     snippets
       .filter(R.compose(Boolean, R.path(['stdout', 'length'])))
-      .forEach((c, i) => {
+      .forEach(c => {
         console.log(chalk.white(`--- Snippet #${c.id + 1} ---`))
         console.log(chalk.white(c.stdout))
         console.log()
@@ -50,13 +50,13 @@ const listOutput = results => {
 }
 
 // listErrors :: [Object] -> ()
-const listErrors = (results, file) => {
+const listErrors = results => {
   console.log(chalk.bold.red(`\nErrors\n`))
 
   results.forEach(({ file, snippets }) => {
     console.log(chalk.bold.white(`----- ${file} ----- \n`))
 
-    snippets.filter(R.compose(R.not, R.prop('ok'))).forEach((c, i) => {
+    snippets.filter(R.compose(R.not, R.prop('ok'))).forEach(c => {
       console.log(chalk.white(`--- Snippet #${c.id + 1} ---`))
       if (c.timeout) {
         const err = new Error(`Snippet #${c.id + 1} from ${file} timed out.`)
@@ -70,9 +70,9 @@ const listErrors = (results, file) => {
 }
 
 // reduceSnippets :: [Result] -> (Int -> Snippet) -> Int
-const _reduceSnippets = (rs, f) =>
+const reduceSnippets = R.curry((rs, f) =>
   rs.reduce((acc, { snippets }) => acc + snippets.reduce(f, 0), 0)
-const reduceSnippets = R.curry(_reduceSnippets)
+)
 
 const reducers = [
   // success: counts the s.ok === true cases
@@ -139,6 +139,7 @@ const reportResults = (spinner, glob, silent) => results => {
 
   logSummary(cases)
 
+  // eslint-disable-next-line consistent-return
   return cases
 }
 
