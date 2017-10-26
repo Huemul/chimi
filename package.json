@@ -6,8 +6,8 @@
     "chimi": "./bin/bin.js"
   },
   "scripts": {
-    "dev": "babel --watch src -d lib",
-    "build": "babel src/ -d lib/ && yarn format",
+    "dev": "babel --watch src/ -d lib/",
+    "build": "babel src/ -d lib/ && yarn prettier --write 'lib/*.js'",
     "dev": "babel src/ -w -d lib/",
     "prettier": "prettier --no-semi --single-quote --trailing-comma es5 --parser flow",
     "format": "yarn prettier --write '**/*.js'",
@@ -15,6 +15,7 @@
     "precommit": "yarn check && yarn build && lint-staged",
     "prepublish": "yarn build",
     "release": "np",
+    "lint": "yarn eslint '**/*.js'",
     "test": "jest ./tests",
     "e2e": "jest ./e2e"
   },

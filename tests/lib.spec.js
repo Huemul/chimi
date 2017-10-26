@@ -22,7 +22,7 @@ describe('lib', () => {
       console.log(answer)
     `
 
-    it('should only add the source maps code when no dependencies are passed', () => {
+    it('should add source maps but no dependencies', () => {
       const result = injectDependencies([], {}, code)
 
       expect(result).toMatchSnapshot()
@@ -59,7 +59,7 @@ describe('lib', () => {
       expect(result).toMatchSnapshot()
     })
 
-    it('should prepend requires with variable declarations to the input', () => {
+    it('should prepend requires with variable declarations to the snippet code', () => {
       let dependencies = [
         {
           name: '_',
@@ -77,7 +77,7 @@ describe('lib', () => {
         },
         'trae',
       ]
-      result = injectDependencies(dependencies, {}, [], code)
+      result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
     })
@@ -98,7 +98,7 @@ describe('lib', () => {
       expect(result).toMatchSnapshot()
     })
 
-    it('should not add a variable declaration when dependencies map values are falsy', () => {
+    it('should add requires with no declaration when the name is missing', () => {
       const dependencies = [
         {
           module: './for-the-side-effects',
@@ -107,7 +107,7 @@ describe('lib', () => {
           module: 'es6-promise',
         },
       ]
-      const result = injectDependencies(dependencies, {}, [], code)
+      const result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
     })
@@ -122,9 +122,12 @@ describe('lib', () => {
     })
 
     it('should add globals and dependencies', () => {
-      const dependencies = {
-        lodash: '_',
-      }
+      const dependencies = [
+        {
+          name: '_',
+          module: 'lodash',
+        },
+      ]
       const globals = {
         theAnswer: 42,
       }

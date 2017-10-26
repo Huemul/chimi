@@ -3,8 +3,6 @@
 const meow = require('meow')
 const chalk = require('chalk')
 
-// sanctuary with Fluture types added
-const S = require('../lib/sanctuary')
 const runner = require('../lib/runner')
 const readConfig = require('../lib/config')
 

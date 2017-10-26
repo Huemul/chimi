@@ -28,11 +28,11 @@ const handleDep = S.ifElse(
 )
 
 // listDependencies :: [string|Object] -> String
-const listDependencies = R.compose(
+const listDependencies = S.pipe([
+  S.map(handleDep),
+  S.map(appendSemi),
   S.joinWith('\n'),
-  R.map(appendSemi),
-  R.map(handleDep)
-)
+])
 
 // listGlobals :: Object -> String
 const listGlobals = globals =>
