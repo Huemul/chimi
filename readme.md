@@ -54,12 +54,12 @@ You can configure `chimi` using a configuration file, it might be a JSON or Java
 
 ```
 {
-  "dependencies": {
-    "trae": "trae",
-    "lodash": "_",
-    "./config": "config",
-    "es6-promise: ""
-  },
+  "dependencies": [
+    "trae",
+    { "module": "lodash", "name": "_" },
+    { "module": "./config", "name": "config" },
+    { "module": "es6-promise" }
+  ],
   "globals": {
     "answer": 42,
     "add": "(a, b) => a + b",
@@ -75,22 +75,24 @@ You can configure `chimi` using a configuration file, it might be a JSON or Java
 
 **NOTE**: _if it is a JavaScript file, an object has to be exported_.
 
-`dependencies`: `object`
+### `dependencies`: `Array<string|object>`
 
-A list of dependencies to be `require`d on each snippet. Each key represents the path name and the value is the variable name, if the value is an empty string the `require` statement will be not assigned to a variable.
+A list of dependencies to be `require`d on each snippet. 
+
+Pass a string when the variable name and the module to be required are equal. To cover other cases you can pass an object with variable name as the `name` property, the module as the `module` property, if the name is missing the require will not have an assignment.
 
 The depenencies in the example will generate these `require`s:
 ```js
-let trae   = require('trae')
-let _      = require('lodash')
-let config = require('./config')
+const trae   = require('trae')
+const _      = require('lodash')
+const config = require('./config')
 
 require('es6-promise')
 ```
 
 These dependencies will be added to your snippet before running it so you don't have to do it on every snippet.
 
-`globals`: `object`
+### `globals`: `object`
 
 A list of variable declarations to add on each snippet. Each key represents the variable name and the value is, well, the value.
 
@@ -119,13 +121,13 @@ let wrong = hello world
 let right = 'hello world'
 ```
 
-`file`: `string`
+### `file`: `string`
 
 Default: `README.md`.
 
 The path to the file/s you want to parse. It can also be a [glob](https://github.com/isaacs/node-glob#glob-primer). Be sure to specify only `.md` files.
 
-`timeout`: `number`
+### `timeout`: `number`
 
 Default: `5000`.
 
