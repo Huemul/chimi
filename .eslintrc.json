@@ -23,11 +23,5 @@
         "devDependencies": true
       }
     ]
-  },
-  "globals" : {
-    "it": false,
-    "expect": false,
-    "describe": false,
-    "jest": false
   }
 }
