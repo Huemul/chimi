@@ -12,12 +12,14 @@ const fixturesDirs = fs
   .filter(x => fs.lstatSync(x).isDirectory())
 
 describe('e2e tests', () => {
+  // eslint-disable-next-line no-restricted-syntax,prefer-const
   for (let fixtureDir of fixturesDirs) {
     const relativeFixtureDir = path.relative(fixturesRoot, fixtureDir)
 
     it(`should run ${relativeFixtureDir} as expected`, () => {
       shell.cd(fixtureDir)
 
+      // eslint-disable-next-line global-require,import/no-dynamic-require
       const expectations = require(path.join(fixtureDir, 'expectations.json'))
       const command = `${chimiBin} ${expectations.arguments || ''}`
 

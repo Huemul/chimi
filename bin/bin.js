@@ -3,8 +3,6 @@
 const meow = require('meow')
 const chalk = require('chalk')
 
-// sanctuary with Fluture types added
-const S = require('../lib/sanctuary')
 const runner = require('../lib/runner')
 const readConfig = require('../lib/config')
 
@@ -21,7 +19,7 @@ const msg = `
   ${chalk.bold.white('Examples')}
     $ chimi -f README.md
 
-    $ chimi -f doc/*.md
+    $ chimi -f 'doc/*.md'
 `
 
 const cli = meow(msg, {
@@ -38,10 +36,4 @@ const config = readConfig()
 
 const file = cli.flags.file || config.file
 
-runner(
-  config.dependencies,
-  config.globals,
-  config.timeout,
-  file,
-  cli.flags.silent
-)
+runner(file, config, cli.flags)

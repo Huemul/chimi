@@ -6,14 +6,15 @@
     "chimi": "./bin/bin.js"
   },
   "scripts": {
-    "dev": "babel --watch src -d lib",
-    "build": "babel src/ -d lib/ && yarn format",
+    "dev": "babel --watch src/ -d lib/",
+    "build": "babel src/ -d lib/ && yarn prettier --write 'lib/*.js'",
     "prettier": "prettier --no-semi --single-quote --trailing-comma es5 --parser flow",
     "format": "yarn prettier --write '**/*.js'",
     "flow": "flow",
     "precommit": "yarn check && yarn build && lint-staged",
     "prepublish": "yarn build",
     "release": "np",
+    "lint": "yarn eslint '**/*.js'",
     "test": "jest ./tests",
     "e2e": "jest ./e2e"
   },
@@ -49,6 +50,11 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.3.1",
     "flow-bin": "^0.56.0",
     "flow-typed": "^2.2.0",
     "husky": "^0.13.3",

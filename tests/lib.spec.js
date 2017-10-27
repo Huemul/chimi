@@ -1,7 +1,20 @@
 const { stripIndent } = require('common-tags')
-const { injectDependencies } = require('../lib/lib')
+const { injectDependencies, listDependencies } = require('../lib/lib')
 
 describe('lib', () => {
+  describe('listDependencies', () => {
+    const dependencies = [
+      'trae',
+      { module: 'es6-promise' },
+      { name: '_', module: 'lodash' },
+      { name: 'config', module: './config', type: 'let' },
+    ]
+
+    it('should list dependencies in different types', () => {
+      expect(listDependencies(dependencies)).toMatchSnapshot()
+    })
+  })
+
   describe('injectDependencies', () => {
     const code = stripIndent`
       const answer = 42
@@ -9,8 +22,8 @@ describe('lib', () => {
       console.log(answer)
     `
 
-    it('should only add the source maps code when no dependencies are passed', () => {
-      const result = injectDependencies({}, {}, code)
+    it('should add source maps but no dependencies', () => {
+      const result = injectDependencies([], {}, code)
 
       expect(result).toMatchSnapshot()
     })
@@ -27,51 +40,73 @@ describe('lib', () => {
             console.log(bar);
           });
       `
-      let result = injectDependencies({}, {}, withIndentation)
+      let result = injectDependencies([], {}, withIndentation)
 
       expect(result).toMatchSnapshot()
 
-      const dependencies = {
-        lodash: '_',
-        './lib': 'lib',
-      }
+      const dependencies = [
+        {
+          name: '_',
+          module: 'lodash',
+        },
+        {
+          name: 'lib',
+          module: './lib',
+        },
+      ]
       result = injectDependencies(dependencies, {}, withIndentation)
 
       expect(result).toMatchSnapshot()
     })
 
-    it('should prepend requires with variable declarations to the input', () => {
-      let dependencies = {
-        lodash: '_',
-      }
+    it('should prepend requires with variable declarations to the snippet code', () => {
+      let dependencies = [
+        {
+          name: '_',
+          module: 'lodash',
+        },
+      ]
       let result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
 
-      dependencies = {
-        lodash: '_',
-        trae: 'trae',
-      }
+      dependencies = [
+        {
+          name: '_',
+          module: 'lodash',
+        },
+        'trae',
+      ]
       result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
     })
 
     it('should work for local dependencies', () => {
-      const dependencies = {
-        './lib': 'lib',
-        '../foo/bar': 'bar',
-      }
+      const dependencies = [
+        {
+          name: 'lib',
+          module: './lib',
+        },
+        {
+          name: 'bar',
+          module: '../foo/bar',
+        },
+      ]
       const result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
     })
 
-    it('should not add a variable declaration when dependencies map values are falsy', () => {
-      const dependencies = {
-        './for-the-side-effects': false,
-        'es6-promise': false,
-      }
+    it('should add requires with no declaration when the name is missing', () => {
+      const dependencies = [
+        {
+          module: './for-the-side-effects',
+        },
+        {
+          module: 'es6-promise',
+        },
+      ]
       const result = injectDependencies(dependencies, {}, code)
 
       expect(result).toMatchSnapshot()
@@ -81,15 +116,18 @@ describe('lib', () => {
       const globals = {
         theAnswer: 42,
       }
-      const result = injectDependencies({}, globals, code)
+      const result = injectDependencies([], globals, code)
 
       expect(result).toMatchSnapshot()
     })
 
     it('should add globals and dependencies', () => {
-      const dependencies = {
-        lodash: '_',
-      }
+      const dependencies = [
+        {
+          name: '_',
+          module: 'lodash',
+        },
+      ]
       const globals = {
         theAnswer: 42,
       }
@@ -105,7 +143,7 @@ describe('lib', () => {
         foo: "{ foo: 'bar' }",
         fruits: "['orange', 'apple']",
       }
-      const result = injectDependencies({}, globals, code)
+      const result = injectDependencies([], globals, code)
 
       expect(result).toMatchSnapshot()
     })

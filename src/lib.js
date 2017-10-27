@@ -1,5 +1,3 @@
-const fs = require('fs')
-
 const R = require('ramda')
 const Future = require('fluture')
 const { extract } = require('chipa')
@@ -7,37 +5,40 @@ const { SourceMapGenerator } = require('source-map')
 
 // sanctuary with Fluture types added
 const S = require('./sanctuary')
-const { readFile, taskify } = require('./utils')
+const { taskify } = require('./utils')
 const runSnippets = require('./run-snippet')
 
+const appendSemi = r => `${r};`
+
 // requireWithAssignment :: String -> String -> String
-const requireWithAssignment = (path, name) => `let ${name} = require('${path}')`
+const requireWithAssignment = (name, module, type = 'const') =>
+  `${type} ${name} = require('${module || name}')`
 
 // simpleRequire :: String -> String
-const simpleRequire = path => `require('${path}')`
+const simpleRequire = module => `require('${module}')`
 
-// buildRequireExpression :: String -> String -> String
-const buildRequireExpression = R.ifElse(
-  (_, value) => Boolean(value),
+// assignmentExpression :: String -> String -> String
+const assignmentExpression = (key, value) => `let ${key} = ${value}`
+
+const handleDep = S.ifElse(
+  S.is(String),
   requireWithAssignment,
-  simpleRequire
+  ({ name, module, type }) =>
+    name ? requireWithAssignment(name, module, type) : simpleRequire(module)
 )
 
-// buildAssignementExpression :: String -> String -> String
-const buildAssignementExpression = (key, value) => `let ${key} = ${value}`
-
-// listDependencies :: Object -> String
-const listDependencies = deps =>
-  Object.keys(deps)
-    .map(key => buildRequireExpression(key, deps[key]))
-    .map(r => r + ';')
-    .join('\n')
+// listDependencies :: [string|Object] -> String
+const listDependencies = S.pipe([
+  S.map(handleDep),
+  S.map(appendSemi),
+  S.joinWith('\n'),
+])
 
 // listGlobals :: Object -> String
 const listGlobals = globals =>
   Object.keys(globals)
-    .map(key => buildAssignementExpression(key, globals[key]))
-    .map(r => r + ';')
+    .map(key => assignmentExpression(key, globals[key]))
+    .map(appendSemi)
     .join('\n')
 
 const generateSourceMaps = (code, dependencies, globals) => {
@@ -55,6 +56,7 @@ const generateSourceMaps = (code, dependencies, globals) => {
     file: '/decorated-snippet.js',
   })
 
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < codeLinesCount; i++) {
     map.addMapping({
       generated: {
@@ -76,10 +78,10 @@ const generateSourceMaps = (code, dependencies, globals) => {
 
 // injectDependencies :: Object -> Object -> String -> String
 const injectDependencies = (deps, globals, code) => {
-  const dependencies = listDependencies(deps || {})
+  const dependencies = listDependencies(deps || [])
   const globalsStr = listGlobals(globals || {})
   const sourceMaps = generateSourceMaps(code, dependencies, globalsStr)
-  const sourceMapsBase64 = new Buffer(sourceMaps).toString('base64')
+  const sourceMapsBase64 = Buffer.from(sourceMaps).toString('base64')
 
   const sourceMapsInline = `//# sourceMappingURL=data:application/json;charset=utf-8;base64,${sourceMapsBase64}`
 
@@ -139,7 +141,7 @@ const skip = S.map(R.evolve({ snippets: S.filter(matchNoSkip) }))
 // @link: https://github.com/isaacs/node-glob#glob-primer
 
 // taskOfSnippets :: Object -> Object -> Int -> GlobPattern -> Future([FileResult])
-const taskOfSnippets = (dependencies, globals, timeout, glob) =>
+const taskOfSnippets = ({ dependencies, globals, timeout }, glob) =>
   S.pipe(
     [
       S.map(skip),
@@ -151,5 +153,6 @@ const taskOfSnippets = (dependencies, globals, timeout, glob) =>
 
 module.exports = {
   injectDependencies,
+  listDependencies,
   taskOfSnippets,
 }
