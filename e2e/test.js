@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 const shell = require('shelljs')
 
 const chimiBin = path.resolve(__dirname, '..', 'bin', 'bin.js')

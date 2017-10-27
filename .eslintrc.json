@@ -16,7 +16,13 @@
         "trailingComma": "es5"
       }
     ],
-    "no-console": 0
+    "no-console": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ]
   },
   "globals" : {
     "it": false,
