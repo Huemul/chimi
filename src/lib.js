@@ -144,8 +144,8 @@ const skip = S.map(R.evolve({ snippets: S.filter(matchNoSkip) }))
 const taskOfSnippets = ({ dependencies, globals, timeout }, glob) =>
   S.pipe(
     [
-      S.map(skip),
-      S.map(normalizeFiles(dependencies, globals)),
+      S.chain(Future.encase(skip)),
+      S.chain(Future.encase(normalizeFiles(dependencies, globals))),
       S.chain(traverseFiles(timeout)),
     ],
     taskify(extract)(glob, ['js', 'javascript'])
