@@ -3,11 +3,9 @@
 const { exec } = require('child_process')
 const fs = require('fs')
 
+const debug = require('debug')('chimi')
 const R = require('ramda')
 const Future = require('fluture')
-
-// sanctuary with Fluture types added
-const S = require('./sanctuary')
 
 // validateResult :: Int -> String -> String -> Bool
 const validateResult = (code, signal, stderr) =>
@@ -19,6 +17,7 @@ const validateResult = (code, signal, stderr) =>
 // runSnippet :: Int -> Snippet -> Future(Result)
 function runSnippetUncurried(timeout, { value, id }) {
   const fileName = `snippet-${Math.random()}.js`
+  debug('Starting snippet %o', id)
 
   fs.writeFileSync(fileName, value)
 
@@ -38,7 +37,7 @@ function runSnippetUncurried(timeout, { value, id }) {
     child.kill('SIGKILL')
   }, timeout)
 
-  return Future((reject, resolve) => {
+  return new Promise((resolve, reject) => {
     child.on('exit', (code, signal) => {
       clearTimeout(timeoutID)
 
@@ -46,6 +45,7 @@ function runSnippetUncurried(timeout, { value, id }) {
       // providing one makes the process to never exit
       fs.unlinkSync(fileName)
 
+      debug('Finishing snippet %o', id)
       resolve({
         id,
         ok: validateResult(code, signal, stderr),
@@ -56,15 +56,32 @@ function runSnippetUncurried(timeout, { value, id }) {
         timeout: signal === 'SIGKILL',
       })
     })
+    child.on('error', reject)
   })
 }
+
 const runSnippet = R.curry(runSnippetUncurried)
 
 // runSnippets :: Int -> FileN -> Future(FileResult)
-const runSnippets = (timeout, { file, snippets }) =>
-  S.compose(
-    S.map(s => ({ file, snippets: s })),
-    S.traverse(Future, runSnippet(timeout))
-  )(snippets)
+const runSnippets = (timeout, { file, snippets }) => {
+  debug('Running snippets from file %o', file)
+
+  // Run snippets sequentially
+  const whenSnippetsResults = snippets
+    .reduce(
+      (promise, snippet) =>
+        promise.then(results =>
+          runSnippet(timeout, snippet).then(result => results.concat(result))
+        ),
+      Promise.resolve([])
+    )
+    .then(results => {
+      debug('Finished running all snippets')
+      return results
+    })
+    .then(results => ({ file, snippets: results }))
+
+  return Future.tryP(() => whenSnippetsResults)
+}
 
 module.exports = R.curry(runSnippets)

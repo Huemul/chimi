@@ -2,6 +2,7 @@
 
 const meow = require('meow')
 const chalk = require('chalk')
+const debug = require('debug')('chimi')
 
 const runner = require('../lib/runner')
 const readConfig = require('../lib/config')
@@ -34,6 +35,7 @@ const cli = meow(msg, {
 
 const config = readConfig()
 
+debug('Running with config %o', config)
 const file = cli.flags.file || config.file
 
 runner(file, config, cli.flags)
