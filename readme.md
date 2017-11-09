@@ -1,6 +1,14 @@
-# chimi
+<h1 align="center">chimi</h1>
 
-> Validate JavaScript code from your README.
+<p align="center">Validate JavaScript code from your README.</p>
+
+[ ![Codeship Status for Huemul/chimi](https://app.codeship.com/projects/2da4eb10-a041-0135-b319-0606c02fee13/status?branch=master)](https://app.codeship.com/projects/253867)
+
+## Table of contents
+
+1. [How it works](#how-it-works)
+1. [Usage](#usage)
+1. [Configuration](#configuration)
 
 ## How it works
 
@@ -146,25 +154,3 @@ To skip a snippet:
 ```
 ```js (skip)
 ```
-
-## TODO
-
-### V1
-- [ ] Tests
-- [x] CLI
-  - [x] Configuration (`.chimi.js(on)?|.chimirc`).
-  - [x] `--help`.
-  - [x] Log failures.
-  - [ ] Debug option for printing the wrapped snippet.
-
-### Future
-
-- [ ] CLI
-  - [ ] Improve current interface. _Jest like interface when running/watching_.
-- [ ] Process code
-  - [ ] Transpile with Babel. _Check for project Babel config_. (?)
-  - [ ] Lint with Eslint. _If project has Eslint configured_.(?)
-- [ ] Environment. _Use [`jsdom`](https://github.com/tmpvar/jsdom)_?
-- [ ] Snippet metadata. _Using MD snippets flags_
-- [ ] Provide a programmatic API.
-
