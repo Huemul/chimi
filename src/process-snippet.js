@@ -1,10 +1,7 @@
-const R = require('ramda')
-const { extract } = require('chipa')
 const { SourceMapGenerator } = require('source-map')
 
 // sanctuary with Fluture types added
 const S = require('./sanctuary')
-const runSnippets = require('./run-snippet')
 
 const appendSemi = r => `${r};`
 
@@ -110,55 +107,11 @@ const injectDependencies = (file, code, position, deps, globals) => {
   ].join('\n')
 }
 
-// SnippetData :: { value: String, meta: String, ... }
-// Snippet     :: { value: String, meta: String, id: Int }
-// File  :: { file: String, snippets: [SnippetData], ... }
-// FileN :: { file: String, snippets: [Snippet] }
-
-// traverseFiles :: Int -> [FileN] -> Promise([FileResult])
-const traverseFiles = timeout => snippets =>
-  Promise.all(snippets.map(runSnippets(timeout)))
-
-const mapWithIndex = R.addIndex(S.map)
-
-// normalizeSnippets :: Object -> Object -> [SnippetData] -> [Snippet]
-const normalizeSnippets = (file, deps, globals) =>
-  mapWithIndex(({ value, meta, position }, index) => ({
-    id: index,
-    value: injectDependencies(file, value, position, deps, globals),
-    meta,
-  }))
-
-// normalizeFiles :: Object -> Object -> [File] -> [FileN]
-const normalizeFiles = (deps, globals) =>
-  S.map(({ file, snippets }) => ({
-    file,
-    snippets: normalizeSnippets(file, deps, globals)(snippets),
-  }))
-
-// matches "(skip)"with any amount of spaces between the whitespace
-const skipRegex = /\(\s*skip\s*\)/
-
-// matchNoSkip :: Snippet -> Bool
-const matchNoSkip = S.compose(S.complement(S.test(skipRegex)), S.prop('meta'))
-
-// skips snippets with `(skip)` in their metadata
-//
-// skip :: [File] -> [File]
-const skip = S.map(R.evolve({ snippets: S.filter(matchNoSkip) }))
-
-// GlobPattern :: String
-// @link: https://github.com/isaacs/node-glob#glob-primer
-
-// taskOfSnippets :: Object -> Object -> Int -> GlobPattern -> Promise([FileResult])
-const taskOfSnippets = ({ dependencies, globals, timeout }, glob) =>
-  extract(glob, ['js', 'javascript'])
-    .then(skip)
-    .then(normalizeFiles(dependencies, globals))
-    .then(traverseFiles(timeout))
+const processSnippet = (file, code, position, deps, globals) =>
+  injectDependencies(file, code, position, deps, globals)
 
 module.exports = {
   injectDependencies,
   listDependencies,
-  taskOfSnippets,
+  processSnippet,
 }
