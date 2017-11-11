@@ -4,6 +4,11 @@ const { types } = recast
 const n = types.namedTypes
 const b = types.builders
 
+/**
+ * Apply the given aliases to the code requires/imports
+ *
+ * Returns an object with the transformed code and the sourcemaps
+ */
 const applyAliases = aliases => (filename, code) => {
   let ast = null
 

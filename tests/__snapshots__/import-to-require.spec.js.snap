@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`import-to-require should transform import to requires 1`] = `
+"var _foo = require('foo');
+
+console.log(_foo.default);"
+`;
