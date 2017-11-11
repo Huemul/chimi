@@ -1,6 +1,6 @@
 const { SourceMapGenerator } = require('source-map')
 
-const S = require('../lib/sanctuary')
+const S = require('../sanctuary')
 
 const appendSemi = r => `${r};`
 

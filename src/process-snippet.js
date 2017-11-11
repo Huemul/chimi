@@ -1,6 +1,6 @@
 const { SourceMapConsumer, SourceMapGenerator } = require('source-map')
 
-const injectDependencies = require('../transformers/inject-dependencies')
+const injectDependencies = require('./transformers/inject-dependencies')
 
 const sourceMapsPrefix =
   '//# sourceMappingURL=data:application/json;charset=utf-8;base64,'
@@ -17,7 +17,7 @@ const mergeMaps = (m1, m2) => {
 
 /**
  * Take a string with code and a list of transformers and return the
- * transformed code with the inlined sourcemaps
+ * transformed code and the composed sourcemaps
  */
 const applyTransforms = (filename, inputCode, transformers) => {
   const { code, map } = transformers.reduce(
@@ -35,6 +35,10 @@ const applyTransforms = (filename, inputCode, transformers) => {
     }
   )
 
+  return { code, map }
+}
+
+const addInlineSourcemap = (code, map) => {
   const sourceMapsBase64 = Buffer.from(JSON.stringify(map)).toString('base64')
   const sourceMapsInline = `${sourceMapsPrefix}${sourceMapsBase64}`
 
@@ -50,7 +54,9 @@ const processSnippet = (file, code, position, deps, globals) => {
     globals
   )
 
-  return applyTransforms(file, code, [injectDependenciesTransformer])
+  const result = applyTransforms(file, code, [injectDependenciesTransformer])
+
+  return addInlineSourcemap(result.code, result.map)
 }
 
 module.exports = {
