@@ -1,5 +1,6 @@
-const applyAliases = require('../lib/transformers/apply-aliases')
 const { stripIndent } = require('common-tags')
+
+const applyAliases = require('../../lib/transformers/apply-aliases')
 
 describe('apply-aliases', () => {
   it('should transform requires', () => {

@@ -1,5 +1,6 @@
-const importToRequire = require('../lib/transformers/import-to-require')
 const { stripIndent } = require('common-tags')
+
+const importToRequire = require('../../lib/transformers/import-to-require')
 
 describe('import-to-require', () => {
   it('should transform import to requires', () => {
