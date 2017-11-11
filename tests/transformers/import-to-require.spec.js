@@ -7,7 +7,13 @@ describe('import-to-require', () => {
     const inputCode = stripIndent`
       import foo from 'foo'
 
+      import { bar } from 'bar'
+
+      import * as qux from 'qux'
+
       console.log(foo)
+      console.log(bar)
+      console.log(qux)
     `
 
     const { code } = importToRequire()('README.md', inputCode)
