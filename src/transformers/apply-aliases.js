@@ -9,7 +9,7 @@ const b = types.builders
  *
  * Returns an object with the transformed code and the sourcemaps
  */
-const applyAliases = aliases => (filename, code) => {
+const applyAliases = (aliases = {}) => (filename, code) => {
   let ast = null
 
   try {

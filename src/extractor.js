@@ -14,18 +14,18 @@ const { processSnippet } = require('./process-snippet')
 const mapWithIndex = R.addIndex(S.map)
 
 // normalizeSnippets :: Object -> Object -> [SnippetData] -> [Snippet]
-const normalizeSnippets = (file, deps, globals) =>
+const normalizeSnippets = (file, config) =>
   mapWithIndex(({ value, meta, position }, index) => ({
     id: index,
-    value: processSnippet(file, value, position, deps, globals),
+    value: processSnippet(file, value, position, config),
     meta,
   }))
 
 // normalizeFiles :: Object -> Object -> [File] -> [FileN]
-const normalizeFiles = (deps, globals) =>
+const normalizeFiles = config =>
   S.map(({ file, snippets }) => ({
     file,
-    snippets: normalizeSnippets(file, deps, globals)(snippets),
+    snippets: normalizeSnippets(file, config)(snippets),
   }))
 
 // matches "(skip)"with any amount of spaces between the whitespace
@@ -43,10 +43,10 @@ const skip = S.map(R.evolve({ snippets: S.filter(matchNoSkip) }))
 // @link: https://github.com/isaacs/node-glob#glob-primer
 
 // extractSnippets :: Object -> Object -> Int -> GlobPattern -> Promise([FileN])
-const extractSnippets = ({ dependencies, globals }, glob) =>
+const extractSnippets = (config, glob) =>
   extract(glob, ['js', 'javascript'])
     .then(skip)
-    .then(normalizeFiles(dependencies, globals))
+    .then(normalizeFiles(config))
 
 module.exports = {
   extractSnippets,

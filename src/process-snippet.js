@@ -1,8 +1,8 @@
 const { SourceMapConsumer, SourceMapGenerator } = require('source-map')
-const debug = require('debug')('chimi')
 
-const injectDependencies = require('./transformers/inject-dependencies')
+const applyAliases = require('./transformers/apply-aliases')
 const importToRequire = require('./transformers/import-to-require')
+const injectDependencies = require('./transformers/inject-dependencies')
 
 const sourceMapsPrefix =
   '//# sourceMappingURL=data:application/json;charset=utf-8;base64,'
@@ -49,7 +49,6 @@ const applyTransforms = (filename, inputCode, transformers) => {
 }
 
 const addInlineSourcemap = (code, map) => {
-  debug(`addInlineSourcemap(%o, %o)`, code, map)
   const sourceMapsBase64 = Buffer.from(JSON.stringify(map)).toString('base64')
   const sourceMapsInline = `${sourceMapsPrefix}${sourceMapsBase64}`
 
@@ -58,20 +57,21 @@ const addInlineSourcemap = (code, map) => {
   return transformedCode
 }
 
-const processSnippet = (file, code, position, deps, globals) => {
+const processSnippet = (file, code, position, config) => {
   const injectDependenciesTransformer = injectDependencies(
     position,
-    deps,
-    globals
+    config.dependencies,
+    config.globals
   )
   const importToRequireTransformer = importToRequire()
+  const applyAliasesTransformer = applyAliases(config.aliases)
 
   const result = applyTransforms(file, code, [
+    applyAliasesTransformer,
     injectDependenciesTransformer,
     importToRequireTransformer,
   ])
 
-  debug('Processed snippet, result: %o', result)
   if (result.error) {
     // This is a (hopefully) temporary hack, we should handle
     // parsing errors in another way
