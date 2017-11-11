@@ -1,4 +1,5 @@
 const { SourceMapConsumer, SourceMapGenerator } = require('source-map')
+const debug = require('debug')('chimi')
 
 const injectDependencies = require('./transformers/inject-dependencies')
 const importToRequire = require('./transformers/import-to-require')
@@ -21,7 +22,7 @@ const mergeMaps = (m1, m2) => {
  * transformed code and the composed sourcemaps
  */
 const applyTransforms = (filename, inputCode, transformers) => {
-  const { code, map } = transformers.reduce(
+  const finalResult = transformers.reduce(
     (previousResult, transformer) => {
       if (previousResult.code === null) {
         return previousResult
@@ -44,10 +45,11 @@ const applyTransforms = (filename, inputCode, transformers) => {
     }
   )
 
-  return { code, map }
+  return finalResult
 }
 
 const addInlineSourcemap = (code, map) => {
+  debug(`addInlineSourcemap(%o, %o)`, code, map)
   const sourceMapsBase64 = Buffer.from(JSON.stringify(map)).toString('base64')
   const sourceMapsInline = `${sourceMapsPrefix}${sourceMapsBase64}`
 
@@ -69,8 +71,11 @@ const processSnippet = (file, code, position, deps, globals) => {
     importToRequireTransformer,
   ])
 
-  if (result.code === null) {
-    // Do something with result.error
+  debug('Processed snippet, result: %o', result)
+  if (result.error) {
+    // This is a (hopefully) temporary hack, we should handle
+    // parsing errors in another way
+    return `throw new Error(${result.error.toString()})`
   }
 
   return addInlineSourcemap(result.code, result.map)
