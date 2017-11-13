@@ -10,7 +10,7 @@ Output
 42
 
 
- PASS  0-README.md
+ PASS  1-README.md
 
   Files: 1
   Snippets succeded: 1
@@ -27,7 +27,7 @@ Output
 42
 
 
- PASS  0-README.md
+ PASS  1-README.md
 
   Files: 1
   Snippets succeded: 1
@@ -50,8 +50,8 @@ Output
 42
 
 
- PASS  0-DOCS.md
- PASS  0-README.md
+ PASS  1-DOCS.md
+ PASS  1-README.md
 
   Files: 2
   Snippets succeded: 2
@@ -72,8 +72,8 @@ Output
 42
 
 
- PASS  0-README.md
  PASS  1-README.md
+ PASS  2-README.md
 
   Files: 1
   Snippets succeded: 2
@@ -117,8 +117,8 @@ ReferenceError: answer is not defined
     at bootstrap_node.js:607:3
 
 
- FAIL  0-README.md
  FAIL  1-README.md
+ FAIL  2-README.md
 
   Files: 1
   Snippets rejected: 2
@@ -140,8 +140,8 @@ I'm here for the side effects
 8080
 
 
- PASS  0-README.md
  PASS  1-README.md
+ PASS  2-README.md
 
   Files: 1
   Snippets succeded: 2
@@ -154,7 +154,7 @@ Output
 
 ----- README.md ----- 
 
- PASS  0-README.md
+ PASS  1-README.md
 
   Files: 1
   Snippets succeded: 1
@@ -167,7 +167,7 @@ Output
 
 ----- README.md ----- 
 
- PASS  0-README.md
+ PASS  1-README.md
 
   Files: 1
   Snippets succeded: 1

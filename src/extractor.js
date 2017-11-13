@@ -16,7 +16,7 @@ const mapWithIndex = R.addIndex(S.map)
 // normalizeSnippets :: Object -> Object -> [SnippetData] -> [Snippet]
 const normalizeSnippets = (file, config) =>
   mapWithIndex(({ value, meta, position }, index) => ({
-    id: index,
+    id: index + 1,
     value: processSnippet(file, value, position, config),
     meta,
   }))
