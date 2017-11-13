@@ -9,7 +9,6 @@ const generateSourceMaps = (
   dependencies,
   globals
 ) => {
-  const source = process.env.NODE_ENV === 'dev' ? `/${file}` : file
   const decoratedCodeFirstLine =
     1 +
     1 + // require source-map-suppor
@@ -35,11 +34,11 @@ const generateSourceMaps = (
         line: position.start.line + i + 1,
         column: 0,
       },
-      source,
+      source: file,
     })
   }
 
-  map.setSourceContent(source, code)
+  map.setSourceContent(file, code)
 
   return map.toJSON()
 }

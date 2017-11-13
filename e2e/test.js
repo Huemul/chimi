@@ -6,8 +6,6 @@ const shell = require('shelljs')
 const chimiBin = path.resolve(__dirname, '..', 'bin', 'bin.js')
 const fixturesRoot = path.join(__dirname, 'fixtures')
 
-process.env.NODE_ENV = 'dev'
-
 const fixturesDirs = fs
   .readdirSync(fixturesRoot)
   .map(x => path.join(fixturesRoot, x))
