@@ -42,7 +42,7 @@ const listOutput = results => {
     snippets
       .filter(R.compose(Boolean, R.path(['stdout', 'length'])))
       .forEach(c => {
-        console.log(chalk.white(`--- Snippet #${c.id + 1} ---`))
+        console.log(chalk.white(`--- Snippet #${c.id} ---`))
         console.log(chalk.white(c.stdout))
         console.log()
       })
@@ -57,9 +57,9 @@ const listErrors = results => {
     console.log(chalk.bold.white(`----- ${file} ----- \n`))
 
     snippets.filter(R.compose(R.not, R.prop('ok'))).forEach(c => {
-      console.log(chalk.white(`--- Snippet #${c.id + 1} ---`))
+      console.log(chalk.white(`--- Snippet #${c.id} ---`))
       if (c.timeout) {
-        const err = new Error(`Snippet #${c.id + 1} from ${file} timed out.`)
+        const err = new Error(`Snippet #${c.id} from ${file} timed out.`)
         console.log(chalk.red(err))
       } else {
         console.log(chalk.red(c.stderr))
