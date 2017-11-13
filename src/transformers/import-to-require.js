@@ -11,7 +11,7 @@ const importToRequire = () => (filename, code) => {
     babelrc: false,
     sourceMaps: true,
     sourceFileName: filename,
-    plugins: [[transformModulesPlugin]],
+    plugins: [[transformModulesPlugin, { strict: false }]],
   }
 
   let result = null
