@@ -147,3 +147,29 @@ I'm here for the side effects
   Snippets succeded: 2
 "
 `;
+
+exports[`e2e tests should run 07-with-imports as expected 1`] = `
+"
+Output
+
+----- README.md ----- 
+
+ PASS  0-README.md
+
+  Files: 1
+  Snippets succeded: 1
+"
+`;
+
+exports[`e2e tests should run 08-with-aliases as expected 1`] = `
+"
+Output
+
+----- README.md ----- 
+
+ PASS  0-README.md
+
+  Files: 1
+  Snippets succeded: 1
+"
+`;

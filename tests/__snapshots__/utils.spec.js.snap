@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils listDependencies should list dependencies in different types 1`] = `
+"const trae = require('trae');
+require('es6-promise');
+const _ = require('lodash');
+let config = require('./config');"
+`;

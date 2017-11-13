@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`apply-aliases should do nothing if the aliases object is empty 1`] = `
+"const foo = require('foo')
+const qux = require('qux')
+
+console.log(foo)"
+`;
+
+exports[`apply-aliases should not modify imports that are not in the aliases object 1`] = `
+"import foo from \\"bar\\"
+import qux from 'qux'
+
+console.log(foo)"
+`;
+
+exports[`apply-aliases should not modify requires that are not in the aliases object 1`] = `
+"const foo = require(\\"bar\\")
+const qux = require('qux')
+
+console.log(foo)"
+`;
+
+exports[`apply-aliases should transform both requires and imports 1`] = `
+"const foo = require(\\"bar\\")
+import qux from \\"qux2\\"
+
+console.log(foo)"
+`;
+
+exports[`apply-aliases should transform imports 1`] = `
+"import foo from \\"bar\\"
+
+console.log(foo)"
+`;
+
+exports[`apply-aliases should transform requires 1`] = `
+"const foo = require(\\"bar\\")
+
+console.log(foo)"
+`;
