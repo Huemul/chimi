@@ -1,6 +1,6 @@
 {
   "name": "chimi",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Validate JavaScript code from your README",
   "bin": {
     "chimi": "./bin/bin.js"
