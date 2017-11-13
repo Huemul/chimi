@@ -93,7 +93,7 @@ Errors
 
 --- Snippet #1 ---
 ReferenceError: answer is not defined
-    at Object.<anonymous> (/README.md:4:1)
+    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:6:13)
     at Module._compile (module.js:624:30)
     at Object.Module._extensions..js (module.js:635:10)
     at Module.load (module.js:545:32)
@@ -106,7 +106,7 @@ ReferenceError: answer is not defined
 
 --- Snippet #2 ---
 ReferenceError: answer is not defined
-    at Object.<anonymous> (/README.md:14:1)
+    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:10:22)
     at Module._compile (module.js:624:30)
     at Object.Module._extensions..js (module.js:635:10)
     at Module.load (module.js:545:32)

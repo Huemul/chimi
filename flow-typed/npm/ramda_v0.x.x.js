@@ -330,16 +330,16 @@ declare module ramda {
   }
 
   /**
-  * DONE:
-  * Function*
-  * List*
-  * Logic
-  * Math
-  * Object*
-  * Relation
-  * String
-  * Type
-  */
+   * DONE:
+   * Function*
+   * List*
+   * Logic
+   * Math
+   * Object*
+   * Relation
+   * String
+   * Type
+   */
 
   declare var compose: Compose
   declare var pipe: Pipe
