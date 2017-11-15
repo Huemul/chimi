@@ -20,7 +20,7 @@
 >
 > _Probably me_.
 
-We ~~ideally~~ test our code and care about it's quality, but not so much about documentation. Snippets of code in the docs sometimes have typos or even are out of sync with the library version.
+We ~~ideally~~ test our code and care about its quality, but not so much about documentation. Snippets of code in the docs sometimes have typos or even are out of sync with the library version.
 
 ## This solution
 
@@ -107,7 +107,7 @@ A list of dependencies to be `require`d on each snippet.
 
 Pass a string when the variable name and the module to be required are equal. To cover other cases you can pass an object with variable name as the `name` property, the module as the `module` property, if the name is missing the require will not have an assignment.
 
-The depenencies in the example will generate these `require`s:
+The dependencies in the example will generate these `require`s:
 
 ```js
 const trae   = require('trae')
@@ -207,6 +207,6 @@ This is useful when the snippet has purposely incompleted or broken code.
 
 There are other tools that will help you improve your JS in Markdown.
 
-- [`prettier`](https://prettier.io/): Formas JavaScript, Markdown and other languages. Since `v1.8` it supports [formatting Markdown files its JS snippets](https://github.com/prettier/prettier/releases/tag/1.8.0).
+- [`prettier`](https://prettier.io/): Formas JavaScript, Markdown and other languages. Since `v1.8` it supports [formatting JS snippets inside Markdown files](https://github.com/prettier/prettier/releases/tag/1.8.0).
 
 - [`eslint-plugin-markdown`](https://github.com/eslint/eslint-plugin-markdown): Lints JavaScript code blocks in Markdown documents. Since `chimi` runs the code, there are things `eslint` could miss, e.g. you added a breaking change to the library but forgot to update your docs. But if you only want to lint your code, then `eslint-plugin-markdown` is all you need.
