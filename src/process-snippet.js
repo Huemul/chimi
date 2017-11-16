@@ -73,6 +73,11 @@ const processSnippet = (file, code, position, config) => {
   ])
 
   if (result.error) {
+    if (result.error.loc) {
+      result.error.loc.line += position.start.line
+      result.error.message = result.error.message.replace(/\s*\(\d+:\d+\)$/, '')
+    }
+
     return {
       error: result.error,
       code: null,

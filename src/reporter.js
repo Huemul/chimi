@@ -61,8 +61,13 @@ const listErrors = results => {
       if (c.timeout) {
         const err = new Error(`Snippet #${c.id} from ${file} timed out.`)
         console.log(chalk.red(err))
-      } else {
+      } else if (typeof c.stderr === 'string') {
         console.log(chalk.red(c.stderr))
+      } else if (c.stderr && c.stderr.loc) {
+        const { line } = c.stderr.loc
+        console.log(
+          chalk.red(`Syntax error in line ${line}: ${c.stderr.message}`)
+        )
       }
       console.log()
     })
