@@ -16,11 +16,6 @@ const validateResult = (code, signal, stderr) =>
 // runSnippet :: Int -> Snippet -> Promise(Result)
 function runSnippetUncurried(timeout, { code, error, id }) {
   if (error) {
-    console.log({
-      error,
-      str: error.toString(),
-    })
-
     return Promise.resolve({
       id,
       ok: false,

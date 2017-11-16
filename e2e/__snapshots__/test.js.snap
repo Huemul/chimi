@@ -173,3 +173,24 @@ Output
   Snippets succeded: 1
 "
 `;
+
+exports[`e2e tests should run 09-syntax-error as expected 1`] = `
+"
+Output
+
+----- README.md ----- 
+
+
+Errors
+
+----- README.md ----- 
+
+--- Snippet #1 ---
+Error: Line 1: Missing initializer in const declaration
+
+ FAIL  1-README.md
+
+  Files: 1
+  Snippets rejected: 1
+"
+`;
