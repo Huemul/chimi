@@ -75,13 +75,13 @@ const processSnippet = (file, code, position, config) => {
   if (result.error) {
     return {
       error: result.error,
-      value: null,
+      code: null,
     }
   }
 
   return {
     error: null,
-    value: addInlineSourcemap(result.code, result.map),
+    code: addInlineSourcemap(result.code, result.map),
   }
 }
 
