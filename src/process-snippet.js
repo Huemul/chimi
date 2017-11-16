@@ -73,12 +73,16 @@ const processSnippet = (file, code, position, config) => {
   ])
 
   if (result.error) {
-    // This is a (hopefully) temporary hack, we should handle
-    // parsing errors in another way
-    return `throw new Error(${result.error.toString()})`
+    return {
+      error: result.error,
+      value: null,
+    }
   }
 
-  return addInlineSourcemap(result.code, result.map)
+  return {
+    error: null,
+    value: addInlineSourcemap(result.code, result.map),
+  }
 }
 
 module.exports = {

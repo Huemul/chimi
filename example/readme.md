@@ -52,3 +52,11 @@ setTimeout(() => {
   console.log('I will never run')
 }, 5.5 * 1000)
 ```
+
+### Syntax errors
+
+```javascript
+const foo 'bar'
+
+console.log(foo)
+```

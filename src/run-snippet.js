@@ -14,7 +14,24 @@ const validateResult = (code, signal, stderr) =>
 // FileResult :: { file: String, results: [Result] }
 
 // runSnippet :: Int -> Snippet -> Promise(Result)
-function runSnippetUncurried(timeout, { value, id }) {
+function runSnippetUncurried(timeout, { value, error, id }) {
+  if (error) {
+    console.log({
+      error,
+      str: error.toString(),
+    })
+
+    return Promise.resolve({
+      id,
+      ok: false,
+      code: 1,
+      signal: '',
+      stdout: '',
+      stderr: error,
+      timeout: false,
+    })
+  }
+
   const fileName = `snippet-${Math.random()}.js`
   debug('Starting snippet %o', id)
 
