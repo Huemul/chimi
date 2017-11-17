@@ -4,7 +4,7 @@ exports[`e2e tests should run 01-simple-readme as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 42
@@ -21,7 +21,7 @@ exports[`e2e tests should run 02-use-globals as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 42
@@ -38,13 +38,13 @@ exports[`e2e tests should run 03-multiple-files as expected 1`] = `
 "
 Output
 
------ DOCS.md -----
+----- DOCS.md ----- 
 
 --- Snippet #1 ---
 42
 
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 42
@@ -62,7 +62,7 @@ exports[`e2e tests should run 04-multiple-snippets as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 42
@@ -84,16 +84,16 @@ exports[`e2e tests should run 05-simple-fail as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 
 Errors
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 ReferenceError: answer is not defined
-    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:6:13)
+    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:4:1)
     at Module._compile (module.js:624:30)
     at Object.Module._extensions..js (module.js:635:10)
     at Module.load (module.js:545:32)
@@ -106,7 +106,7 @@ ReferenceError: answer is not defined
 
 --- Snippet #2 ---
 ReferenceError: answer is not defined
-    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:10:22)
+    at Object.<anonymous> (<PROJECT_ROOT>/e2e/fixtures/05-simple-fail/README.md:14:1)
     at Module._compile (module.js:624:30)
     at Object.Module._extensions..js (module.js:635:10)
     at Module.load (module.js:545:32)
@@ -129,7 +129,7 @@ exports[`e2e tests should run 06-with-dependencies as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 I'm here for the side effects
@@ -152,7 +152,7 @@ exports[`e2e tests should run 07-with-imports as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
  PASS  1-README.md
 
@@ -165,7 +165,7 @@ exports[`e2e tests should run 08-with-aliases as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
  PASS  1-README.md
 
@@ -178,12 +178,12 @@ exports[`e2e tests should run 09-syntax-error as expected 1`] = `
 "
 Output
 
------ README.md -----
+----- README.md ----- 
 
 
 Errors
 
------ README.md -----
+----- README.md ----- 
 
 --- Snippet #1 ---
 SyntaxError: README.md: Unexpected token , (4:10)
