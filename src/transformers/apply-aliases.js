@@ -16,7 +16,7 @@ const applyAliases = (aliases = {}) => (filename, code) => {
   try {
     ast = recast.parse(code, {
       sourceFileName: filename,
-      parser: babylon
+      parser: babylon,
     })
   } catch (e) {
     return {
