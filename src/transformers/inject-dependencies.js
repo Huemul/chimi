@@ -19,9 +19,7 @@ const generateSourceMaps = (
 
   const codeLinesCount = code.split('\n').length
 
-  const map = new SourceMapGenerator({
-    file: '/decorated-snippet.js',
-  })
+  const map = new SourceMapGenerator()
 
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < codeLinesCount; i++) {
