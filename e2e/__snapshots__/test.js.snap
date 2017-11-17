@@ -4,7 +4,7 @@ exports[`e2e tests should run 01-simple-readme as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 42
@@ -21,7 +21,7 @@ exports[`e2e tests should run 02-use-globals as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 42
@@ -38,13 +38,13 @@ exports[`e2e tests should run 03-multiple-files as expected 1`] = `
 "
 Output
 
------ DOCS.md ----- 
+----- DOCS.md -----
 
 --- Snippet #1 ---
 42
 
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 42
@@ -62,7 +62,7 @@ exports[`e2e tests should run 04-multiple-snippets as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 42
@@ -84,12 +84,12 @@ exports[`e2e tests should run 05-simple-fail as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 
 Errors
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 ReferenceError: answer is not defined
@@ -129,7 +129,7 @@ exports[`e2e tests should run 06-with-dependencies as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
 I'm here for the side effects
@@ -152,7 +152,7 @@ exports[`e2e tests should run 07-with-imports as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
  PASS  1-README.md
 
@@ -165,7 +165,7 @@ exports[`e2e tests should run 08-with-aliases as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
  PASS  1-README.md
 
@@ -178,19 +178,23 @@ exports[`e2e tests should run 09-syntax-error as expected 1`] = `
 "
 Output
 
------ README.md ----- 
+----- README.md -----
 
 
 Errors
 
------ README.md ----- 
+----- README.md -----
 
 --- Snippet #1 ---
-Syntax error in line 2: Unexpected token
+SyntaxError: README.md: Unexpected token , (4:10)
+
+--- Snippet #2 ---
+SyntaxError: README.md: Unexpected token , (10:16)
 
  FAIL  1-README.md
+ FAIL  2-README.md
 
   Files: 1
-  Snippets rejected: 1
+  Snippets rejected: 2
 "
 `;

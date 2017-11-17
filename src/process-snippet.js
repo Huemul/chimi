@@ -67,6 +67,8 @@ const processSnippet = (file, code, position, config) => {
   if (result.error) {
     if (result.error.loc) {
       result.error.loc.line += position.start.line
+      // /\s*\(\d+:\d+\)$/ matches (xx:xx) at the end of the line
+      // @link: https://goo.gl/ySyqk6
       result.error.message = result.error.message.replace(/\s*\(\d+:\d+\)$/, '')
     }
 
