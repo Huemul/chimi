@@ -89,8 +89,8 @@ You can configure `chimi` using a configuration file, it might be a JSON or Java
     "fruits": "['orange', 'apple']",
     "config": "{ port: 8080 }"
   },
-  "globals": {
-    "./dist/my-lib": "my-lib"
+  "aliases": {
+    "my-lib": "./dist/my-lib"
   },
   "file": "readme.md",
   "timeout": 5000

@@ -1,4 +1,5 @@
 const recast = require('recast')
+const babylon = require('babylon')
 
 const { types } = recast
 const n = types.namedTypes
@@ -15,6 +16,7 @@ const applyAliases = (aliases = {}) => (filename, code) => {
   try {
     ast = recast.parse(code, {
       sourceFileName: filename,
+      parser: babylon,
     })
   } catch (e) {
     return {
@@ -55,9 +57,7 @@ const applyAliases = (aliases = {}) => (filename, code) => {
     },
   })
 
-  const result = recast.print(ast, {
-    sourceMapName: 'map.json',
-  })
+  const result = recast.print(ast)
 
   return {
     code: result.code,

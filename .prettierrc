@@ -2,5 +2,6 @@
   "printWidth": 80,
   "semi": false,
   "trailingComma": "es5",
-  "parser": "flow"
+  "parser": "flow",
+  "singleQuote": true
 }

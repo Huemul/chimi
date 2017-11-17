@@ -2,6 +2,7 @@ const R = require('ramda')
 const ora = require('ora')
 const chalk = require('chalk')
 const pluralize = require('pluralize')
+const { oneLine } = require('common-tags')
 
 const FAIL = chalk.inverse.bold.red(' FAIL ')
 const PASS = chalk.inverse.bold.green(' PASS ')
@@ -60,9 +61,19 @@ const listErrors = results => {
       console.log(chalk.white(`--- Snippet #${c.id} ---`))
       if (c.timeout) {
         const err = new Error(`Snippet #${c.id} from ${file} timed out.`)
+
         console.log(chalk.red(err))
-      } else {
+      } else if (typeof c.stderr === 'string') {
         console.log(chalk.red(c.stderr))
+      } else if (c.stderr && c.stderr.loc) {
+        const { line, column } = c.stderr.loc
+        const msg = oneLine`
+          ${R.path(['constructor', 'name'], c.stderr) || 'Error'}:
+          ${file}: ${c.stderr.message} ,
+          (${line}:${column})
+        `
+
+        console.log(chalk.red(msg))
       }
       console.log()
     })

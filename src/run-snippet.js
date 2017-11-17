@@ -14,11 +14,23 @@ const validateResult = (code, signal, stderr) =>
 // FileResult :: { file: String, results: [Result] }
 
 // runSnippet :: Int -> Snippet -> Promise(Result)
-function runSnippetUncurried(timeout, { value, id }) {
+function runSnippetUncurried(timeout, { code, error, id }) {
+  if (error) {
+    return Promise.resolve({
+      id,
+      ok: false,
+      code: 1,
+      signal: '',
+      stdout: '',
+      stderr: error,
+      timeout: false,
+    })
+  }
+
   const fileName = `snippet-${Math.random()}.js`
   debug('Starting snippet %o', id)
 
-  fs.writeFileSync(fileName, value)
+  fs.writeFileSync(fileName, code)
 
   const child = exec(`node ${fileName}`)
 
@@ -37,7 +49,7 @@ function runSnippetUncurried(timeout, { value, id }) {
   }, timeout)
 
   return new Promise((resolve, reject) => {
-    child.on('exit', (code, signal) => {
+    child.on('exit', (exitCode, signal) => {
       clearTimeout(timeoutID)
 
       // the async version requires a callback, and
@@ -47,8 +59,8 @@ function runSnippetUncurried(timeout, { value, id }) {
       debug('Finishing snippet %o', id)
       resolve({
         id,
-        ok: validateResult(code, signal, stderr),
-        code,
+        ok: validateResult(exitCode, signal, stderr),
+        code: exitCode,
         signal,
         stdout,
         stderr,

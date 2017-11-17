@@ -1,4 +1,4 @@
-const { SourceMapConsumer, SourceMapGenerator } = require('source-map')
+const merge = require('merge-source-map')
 
 const applyAliases = require('./transformers/apply-aliases')
 const importToRequire = require('./transformers/import-to-require')
@@ -6,16 +6,6 @@ const injectDependencies = require('./transformers/inject-dependencies')
 
 const sourceMapsPrefix =
   '//# sourceMappingURL=data:application/json;charset=utf-8;base64,'
-
-const mergeMaps = (m1, m2) => {
-  if (!m1) {
-    return m2
-  }
-
-  const map = SourceMapGenerator.fromSourceMap(new SourceMapConsumer(m2))
-  map.applySourceMap(new SourceMapConsumer(m1))
-  return map.toJSON()
-}
 
 /**
  * Take a string with code and a list of transformers and return the
@@ -34,9 +24,11 @@ const applyTransforms = (filename, inputCode, transformers) => {
         return result
       }
 
+      const mergedMaps = merge(previousResult.map, result.map)
+
       return {
         code: result.code,
-        map: mergeMaps(previousResult.map, result.map),
+        map: mergedMaps,
       }
     },
     {
@@ -73,12 +65,23 @@ const processSnippet = (file, code, position, config) => {
   ])
 
   if (result.error) {
-    // This is a (hopefully) temporary hack, we should handle
-    // parsing errors in another way
-    return `throw new Error(${result.error.toString()})`
+    if (result.error.loc) {
+      result.error.loc.line += position.start.line
+      // /\s*\(\d+:\d+\)$/ matches (xx:xx) at the end of the line
+      // @link: https://goo.gl/ySyqk6
+      result.error.message = result.error.message.replace(/\s*\(\d+:\d+\)$/, '')
+    }
+
+    return {
+      error: result.error,
+      code: null,
+    }
   }
 
-  return addInlineSourcemap(result.code, result.map)
+  return {
+    error: null,
+    code: addInlineSourcemap(result.code, result.map),
+  }
 }
 
 module.exports = {
