@@ -186,7 +186,7 @@ Errors
 ----- README.md ----- 
 
 --- Snippet #1 ---
-Error: Line 1: Missing initializer in const declaration
+Syntax error in line 2: Unexpected token
 
  FAIL  1-README.md
 
