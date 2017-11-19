@@ -1,6 +1,6 @@
 <h1 align="center">chimi</h1>
 
-<p align="center">Validate JavaScript code from your README.</p>
+<p align="center">Validate the JavaScript code of your Markdown files.</p>
 
 [ ![Codeship Status for Huemul/chimi](https://app.codeship.com/projects/2da4eb10-a041-0135-b319-0606c02fee13/status?branch=master)](https://app.codeship.com/projects/253867)
 
@@ -24,7 +24,7 @@ We ~~ideally~~ test our code and care about its quality, but not so much about d
 
 ## This solution
 
-`chimi` aims to bring the same principles we use for automating tests of our code to test the documentation. By parsing Markdown files and runnings the JavaScript snippets to check if everything is alright.
+`chimi` aims to bring the same principles we use for automating tests of our code to test the documentation. It parses Markdown files and runs the JavaScript snippets to check if everything is alright.
 
 ## Installation
 
@@ -33,7 +33,7 @@ $ yarn add chimi --dev
 $ npm i chimi --save-dev
 ```
 
-Global works too
+Global works too:
 
 ```bash
 $ yarn global add chimi
@@ -72,7 +72,7 @@ To let `chimi` find the snippets you have to indicate the snippet language using
 ```javascript
 ```
 
-You can configure `chimi` using a configuration file, it might be a JSON or JavaScript file (`chimi.config.js`, `.chimirc`) and also an object as the `chimi` property in the `package.json`:
+You can configure `chimi` using a configuration file, it might be a JSON or JavaScript file (`chimi.config.js`, `.chimirc`) or the `chimi` property in the `package.json`:
 
 ```js
 {
@@ -97,9 +97,7 @@ You can configure `chimi` using a configuration file, it might be a JSON or Java
 }
 ```
 
-**NOTE**: _the `.chimirc` file has to be a valid JSON_.
-
-**NOTE**: _if it is a JavaScript file, an object has to be exported_.
+**NOTE**: _the `.chimirc` file has to be a valid JSON_. _If it is a JavaScript file, an object has to be exported_.
 
 ### `dependencies`: `Array<string|object>`
 
@@ -133,7 +131,7 @@ let fruits  = ['orange', 'apple']
 let port    = { port: 8080 }
 ```
 
-**NOTE**: _strings must be quoted_. E.g. consider the following example.
+**NOTE**: _strings **must** be quoted_. E.g. consider the following example.
 
 ```
 {
@@ -149,9 +147,9 @@ let wrong = hello world
 let right = 'hello world'
 ```
 
-### `alias`: `object`
+### `aliases`: `object`
 
-An object containing aliases for imports and requires, with the format `{ [path to replace]: alias }`.
+An object containing aliases for imports and requires, with the format `{ [path/module to replace]: alias }`.
 
 The `alias` in the example will transform following snippet:
 
@@ -207,6 +205,6 @@ This is useful when the snippet has purposely incompleted or broken code.
 
 There are other tools that will help you improve your JS in Markdown.
 
-- [`prettier`](https://prettier.io/): Formas JavaScript, Markdown and other languages. Since `v1.8` it supports [formatting JS snippets inside Markdown files](https://github.com/prettier/prettier/releases/tag/1.8.0).
+- [`prettier`](https://prettier.io/): Formats JavaScript and other languages. Since `v1.8` it supports [formatting JS snippets inside Markdown files](https://github.com/prettier/prettier/releases/tag/1.8.0).
 
 - [`eslint-plugin-markdown`](https://github.com/eslint/eslint-plugin-markdown): Lints JavaScript code blocks in Markdown documents. Since `chimi` runs the code, there are things `eslint` could miss, e.g. you added a breaking change to the library but forgot to update your docs. But if you only want to lint your code, then `eslint-plugin-markdown` is all you need.
