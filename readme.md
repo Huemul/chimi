@@ -1,4 +1,6 @@
-<h1 align="center">chimi</h1>
+<h1 align="center">
+  <img alt="chimi" src="https://github.com/Huemul/chimi/blob/master/assets/chimi.png">
+</h1>
 
 <p align="center">Validate the JavaScript code of your Markdown files.</p>
 
