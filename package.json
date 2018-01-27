@@ -1,6 +1,6 @@
 {
   "name": "chimi",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Validate the JavaScript code of your Markdown files",
   "bin": {
     "chimi": "./bin/bin.js"
