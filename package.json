@@ -6,21 +6,16 @@
     "chimi": "./bin/bin.js"
   },
   "scripts": {
-    "dev": "babel --watch src/ -d lib/",
-    "build": "babel src/ -d lib/ && yarn prettier --write 'lib/*.js'",
-    "format": "yarn prettier --write '**/*.js'",
-    "flow": "flow",
-    "precommit": "yarn check && yarn build && lint-staged",
-    "prepublish": "yarn build",
+    "format": "yarn prettier --write '**/*.{js,json}'",
+    "format:changed": "pretty-quick",
+    "precommit": "pretty-quick --staged",
     "release": "np",
     "lint": "yarn eslint '**/*.js'",
     "test": "jest ./tests",
     "e2e": "jest ./e2e"
   },
   "author": "gillchristian <gillchristiang@gmail.com>",
-  "contributors": [
-    "fvictorio <victorio.franco@gmail.com>"
-  ],
+  "contributors": ["fvictorio <victorio.franco@gmail.com>"],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -51,27 +46,17 @@
     "source-map-support": "^0.5.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-flow": "^6.23.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-prettier": "^2.3.1",
-    "flow-bin": "^0.56.0",
-    "flow-typed": "^2.2.0",
     "husky": "^0.13.3",
     "jest": "^21.2.1",
     "jest-serializer-path": "^0.1.3",
-    "lint-staged": "^3.4.1",
     "np": "^2.14.1",
     "prettier": "^1.8.2",
+    "pretty-quick": "^1.2.3",
     "shelljs": "^0.7.8"
-  },
-  "lint-staged": {
-    "**/*.js": [
-      "yarn prettier --write",
-      "git add"
-    ]
   }
 }
